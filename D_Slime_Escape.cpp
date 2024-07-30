@@ -49,12 +49,10 @@ void solve()
             aftersum += (arr[i]);
         }
     }
-    debug(prevsum)
-    debug(aftersum)
+     
     int p1 = k - 2, p2 = k;
     ll val = arr[k - 1];
-    if (abs(prevsum) < abs(aftersum))
-    {
+    
         while (p1 >= 0 && p2 < n)
         {
             if (val + arr[p1] >= 0)
@@ -70,23 +68,7 @@ void solve()
                 break;
             }
         }
-    }else{
-          while (p1 >= 0 && p2 < n)
-        {
-            if (val + arr[p2] >= 0)
-            {
-                val += arr[p2++];
-            }
-            else if (val + arr[p1] >= 0)
-            {
-                val += arr[p1--];
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
+    
     if (p1 < 0 || p2 >= n)
     {
         cout << "YES" << endl;
