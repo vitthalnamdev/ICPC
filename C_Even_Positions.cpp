@@ -4,9 +4,7 @@ using namespace std;
 //(popcount) in the below GCC target.
 //#pragma GCC target()
 ////--------- DEBUG START---------////
- 
 #define debug(x) cerr << #x <<" "; _print(x); cerr<< endl;
- 
 void _print(int a){cerr<<a;}
 void _print(char a){cerr<<a;}
 void _print(long long int a ){cerr<<a;}
@@ -21,37 +19,26 @@ int mod = 1e9+7;
 ll inv(ll a) {
 return a <= 1 ? a : mod - (long long)(mod/a) * inv(mod % a) % mod;
 }
-int  countPalindromicSubsequences(string s) {
-        int n = s.length();
-        int mod = 1e9+7;
-        vector<vector<long long int >>dp(n , vector<long long int>( n , 0));
-        for(int i=0;i<n;i++){
-          dp[i][i] = 1;
-        }
-        for(int i=0;i<n;i++){
-            for(int j=i-1;j>=0;j--){
-                if(s[j]==s[i] ){
-                   
-                  dp[j][i]%=mod;
-                }else{
-                  dp[j][i] += dp[j][i-1] + dp[j+1][i] - (j+1>i-1?0:dp[j+1][i-1]);
-                  dp[j][i]%=mod;
-                }
-            }
-        }
-   debug(dp)
-    return dp[0][n-1]%mod;
-}
 #define cntone(x) __builtin_popcountll(x)
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 void solve(){
- string a = "abcdabcdabcdabcdabcdabcdabcdabcddcbadcbadcbadcbadcbadcbadcbadcba";
- cout<<countPalindromicSubsequences(a)<<endl;
+ int n;cin>>n;
+ string s;cin>>s;
+ queue<int>q;
+ int ans = 0;
+
+ for(int i=0;i<n;i++){
+    if(q.empty() || s[i]=='('){
+      q.push(i);
+    }else{
+      int top = q.front();q.pop();
+      ans+=(i-top);
+    }
+ }cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
- 
 int t;cin>>t;
 while(t--){
 solve();
