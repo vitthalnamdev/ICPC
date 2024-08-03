@@ -22,28 +22,16 @@ return a <= 1 ? a : mod - (long long)(mod/a) * inv(mod % a) % mod;
 #define cntone(x) __builtin_popcountll(x)
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
-int dfs(int node  , vector<int>adj[] , vector<int>&arr , int ele ){
+bool dfs(int node  , vector<int>adj[] , vector<int>&arr , int ele , int mn ){
      
-    int mx = INT_MAX;
- for(auto i:adj[node]){
-     int now = dfs(i , adj , arr , ele);
-     mx = min(mx , now);
+  int mn = mn-arr[node]; 
+  for(auto i:adj[node]){    
+   bool  now = dfs(i , adj , arr , ele ,  mn );
+    
   }
- if(mx==INT_MAX){
-    return arr[node];
- }
- arr[node] += (max(0 , mx - ele));
- if(node==3){
-    debug(mx)
-    debug(arr[node])
- }
-
  return arr[node];
 }
-bool check(int node , int ele , vector<int>adj[] , vector<int>arr){
-  int now = dfs(1 , adj , arr , ele);
-   return  now>=ele;
-}
+ 
 void solve(){
  int n;cin>>n;
  vector<int>arr(n+1);
@@ -55,7 +43,7 @@ void solve(){
  }
   int start = 0 ,end = 1e9;
   int mid;
-   cout<<check(1 , 6 , adj , arr)<<endl;
+   cout<<dfs(1 , adj , arr , 6, 6  )<<endl;
 //   while(end-start>1)
 //   {
 //     mid = (start + end)/2;

@@ -31,8 +31,12 @@ void solve(){
  for(int i=0;i<n;i++){
     int x;cin>>x;q[x] = i;
  }
- ll ans = 1;
+ if(n==1){
+   cout<<1<<endl;return;
+ }
+ ll ans = 0;
  ll l =-1;ll r = -1;
+ 
  for(int i=1;i<=n;i++){
     if(i==1){
         ll left = min(p[i] , q[i]);
@@ -44,21 +48,31 @@ void solve(){
        
         right = n-right-1;
         ans+=((right*(right+1))/2);
-          
+        
     }else{
         ll left = min(p[i] , q[i]);
         ll right = max(p[i] , q[i]);
         
         if((left>=l && left<=r) || (right>=l && r>=right)){
-         
+         if((left>=l && left<=r) && (right>=l && r>=right) && i==n){
+            ans++;
+         }
            
             l = min(l , left );r = max(r , right);continue;
         }
-        if(left>r){    
+         
+         if(left<l && right > r){
+          ll rightr = right - r;
+          ll leftf = l - left;
+          ans+=(rightr*leftf);
+          
+         }
+        else if(left>r){    
            ll rightr = left - r;
             
            ll leftl =  l+1;
            ans+=(leftl*rightr);
+           
         }else if(right<l){
           
            ll rightr = n-r;
@@ -66,12 +80,8 @@ void solve(){
         
            ll leftl =  l - right ;
            ans+=(leftl*rightr);
-        }else{
-           
-          ll rightr = right - r;
-          ll leftf = left - l;
-          ans+=(rightr*leftf);
-        }
+            
+        } 
          
          l = min(l , left );r = max(r , right);
     }

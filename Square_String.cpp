@@ -24,8 +24,15 @@ return a <= 1 ? a : mod - (long long)(mod/a) * inv(mod % a) % mod;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 void solve(){
-  
- 
+ ll n;cin>>n;
+ ll ans = 0;
+ for(ll i=1;i<n;i++){
+     ll curr = (i*i)%mod;
+      
+     curr = ((curr * (n-i))*2)%mod;
+     ans+=curr;
+     ans%=mod;
+ }cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
