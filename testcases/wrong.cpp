@@ -41,8 +41,7 @@ int remove(const string &s , const string &rm){
            }
         }
      }
-     debug(rm);
-     debug(dp);
+     
      if(dp[m]==0){
       return 0;
      }

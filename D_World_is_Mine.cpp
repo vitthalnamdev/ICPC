@@ -24,11 +24,12 @@ return a <= 1 ? a : mod - (long long)(mod/a) * inv(mod % a) % mod;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 void yeh_bhi_krr_lete_hain(){
-    
+    int n;cin>>n;
+
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 yeh_bhi_krr_lete_hain();
 }
