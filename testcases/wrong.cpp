@@ -1,81 +1,71 @@
-// Don't look up the rank , if you want a good rank.
-#include<bits/stdc++.h>
+/**
+ *    author:  tourist
+ *    created: 01.08.2021 17:38:51       
+**/
+#include <bits/stdc++.h>
+
 using namespace std;
-  #define ll long long 
-#pragma GCC optimize("O3")
-#pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
-#pragma GCC optimize("unroll-loops")
-////--------- DEBUG START---------////
-#define debug(x) cerr << #x <<" "; _print(x); cerr<< endl;
-void _print(int a){cerr<<a;}
-void _print(char a){cerr<<a;}
-void _print(long long int a ){cerr<<a;}
-void _print(string a){cerr<<a;}
-void _print(bool a){cerr << a;}
-template<class T1 , class T2>void _print(pair<T1,T2>a){cerr<<"{ ";cerr<<a.first<<" "<<a.second;cerr<<" }";}
-template<class T>void _print(vector<T>&a){cerr<<"[ ";for(T i:a){_print(i);cerr<<" ";}cerr<<" ]";}
-template<class T>void _print(set<T>&a){cerr<<"[ ";for(T i:a){_print(i);cerr<<" ";}cerr<<" ]";}
-template<class T>void _print(multiset<T>&a){cerr<<"[ ";for(T i:a){_print(i);cerr<<" ";}cerr<<" ]";}
-////------DEBUG END---------////
-int mod = 1e9+7;
-ll inv(ll a) {
-return a <= 1 ? a : mod - (long long)(mod/a) * inv(mod % a) % mod;
-}
-#define cntone(x) __builtin_popcountll(x)
-#define trailzero(x) __builtin_clzll(x)
-#define trailone(x) __builtin_ctzll(x)
 
-int remove(const string &s , const string &rm){
-     int m = rm.size();
-     int factor = rm.size() - 1;
-     vector<int>dp(m+1 , 0);
-     dp[0] = INT_MAX;
-     for(auto i: s){
-        for(int j=1;j<=m;j++){
-           if(i!=rm[j-1]){
-             continue;
-           }
-           if(dp[j-1]>0){
-             dp[j-1]--;
-             dp[j]++;
-           }
-        }
-     }
-     
-     if(dp[m]==0){
-      return 0;
-     }
-     int ans = dp[m] + dp[m-1] ;
-     int left = dp[m] - 1;
-     int cnt = 1;
-     for(int i=m-2;i>=1;i--)
-     {
-        if(left<=cnt){break;}
-        int req = dp[i];
-        int now = (left-1)/cnt;
-        int used = min(req , now);
-        left-=(used*cnt + 1);
-        ans+=(min(used , now));
-        cnt++;
-     }
-     return ans*factor;
-}
+template <typename T, class F = function<T(const T&, const T&)>>
+class SparseTable {
+ public:
+  int n;
+  vector<vector<T>> mat;
+  F func;
 
+  SparseTable(const vector<T>& a, const F& f) : func(f) {
+    n = static_cast<int>(a.size());
+    int max_log = 32 - __builtin_clz(n);
+    mat.resize(max_log);
+    mat[0] = a;
+    for (int j = 1; j < max_log; j++) {
+      mat[j].resize(n - (1 << j) + 1);
+      for (int i = 0; i <= n - (1 << j); i++) {
+        mat[j][i] = func(mat[j - 1][i], mat[j - 1][i + (1 << (j - 1))]);
+      }
+    }
+  }
 
-// flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-void yeh_bhi_krr_lete_hain(){
- int N ;cin>>N;
- string s;cin>>s;
- ll ans = 0;
- ans += (remove(s , "front"));
- reverse(s.begin() , s.end());
- ans += (remove(s , "kcab"));
- cout<<N-ans<<'\n';
-}
-int main(){
-std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
-while(t--){
-yeh_bhi_krr_lete_hain();
-}
+  T get(int from, int to) const {
+    assert(0 <= from && from <= to && to <= n - 1);
+    int lg = 32 - __builtin_clz(to - from + 1) - 1;
+    return func(mat[lg][from], mat[lg][to - (1 << lg) + 1]);
+  }
+};
+
+int main() {
+  ios::sync_with_stdio(false);
+  cin.tie(0);
+  int tt;
+  cin >> tt;
+  while (tt--) {
+    int n;
+    cin >> n;
+    vector<long long> a(n);
+    for (int i = 0; i < n; i++) {
+      cin >> a[i];
+    }
+    if (n == 1) {
+      cout << 1 << '\n';
+      continue;
+    }
+    vector<long long> b(n - 1);
+    for (int i = 0; i < n - 1; i++) {
+      b[i] = abs(a[i] - a[i + 1]);
+    }
+    SparseTable<long long> st(b, [&](long long i, long long j) { return __gcd(i, j); });
+    int j = -1;
+    int ans = 0;
+    for (int i = 0; i < n - 1; i++) {
+      while (j + 1 < n - 1 && st.get(i, j + 1) > 1) {
+        ++j;
+      }
+      if (i <= j) {
+        ans = max(ans, j - i + 1);
+      }
+      j = max(j, i);
+    }
+    cout << ans + 1 << '\n';
+  }
+  return 0;
 }
