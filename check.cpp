@@ -1,47 +1,68 @@
-// Don't look the rank , if you want a good rank
 #include<bits/stdc++.h>
 using namespace std;
-  #define ll long long 
-#pragma GCC optimize("O3")
-#pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
-#pragma GCC optimize("unroll-loops")
-////--------- DEBUG START---------////
-#define debug(x) cerr << #x <<" "; _print(x); cerr<< endl;
-void _print(int a){cerr<<a;}
-void _print(char a){cerr<<a;}
-void _print(long long int a ){cerr<<a;}
-void _print(string a){cerr<<a;}
-void _print(bool a){cerr << a;}
-template<class T1 , class T2>void _print(pair<T1,T2>a){cerr<<"{ ";cerr<<a.first<<" "<<a.second;cerr<<" }";}
-template<class T>void _print(vector<T>&a){cerr<<"[ ";for(T i:a){_print(i);cerr<<" ";}cerr<<" ]";}
-template<class T>void _print(set<T>&a){cerr<<"[ ";for(T i:a){_print(i);cerr<<" ";}cerr<<" ]";}
-template<class T>void _print(multiset<T>&a){cerr<<"[ ";for(T i:a){_print(i);cerr<<" ";}cerr<<" ]";}
-////------DEBUG END---------////
-int mod = 1e9+7;
-ll inv(ll a) {
-return a <= 1 ? a : mod - (long long)(mod/a) * inv(mod % a) % mod;
-}
-class compare{
+#define ll long long 
+ 
+class DSU{
   public:
-  bool operator ()(int a, int b){
-      return a  > b;
+  int n;
+  int* parent; int *rank;
+  DSU(int sz){
+     n= sz;
+    parent = new int[200005];
+    rank = new int[200005];
+    for(int i=1;i<=n;i++)parent[i]=i,rank[i] = 0;
   }
+  int find(int a){
+     if(parent[a]==a){return a;}
+     return find(parent[a]);
+  }
+ 
+  bool merge(int a, int b){
+    
+     int parenta = find(a);int parentb = find(b);
+     if(parenta == parentb){return false;}
+     if(rank[parenta]>rank[parentb]){
+        parent[parentb] = parenta;
+     }else if(rank[parentb]> rank[parenta]){
+        parent[parenta] = parentb;
+     }
+     else{
+        parent[parentb] = parenta;
+        rank[parenta]++;
+     }
+     return true;
+  }
+ 
 };
-#define cntone(x) __builtin_popcountll(x)
-#define trailzero(x) __builtin_clzll(x)
-#define trailone(x) __builtin_ctzll(x)
-// flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-void yeh_bhi_krr_lete_hain(){
- set<int , compare>a;
-    a.insert(1);
-    a.insert(2);
-    int ele = *a.begin();
-    cout<<ele<<endl;
+void solve(){
+   int n, m;cin>>n>>m;
+   DSU now(n+1);
+   vector<vector<int>>arr;
+   for(int i=0;i<m;i++){
+    int a, b, c;cin>>a>>b>>c;
+      vector<int>temp = {c, a, b};
+      arr.push_back(temp);
+   }
+   sort(arr.begin(),arr.end());
+   ll ans = 0;int count = 0;
+  
+   for(int i=0;i<m;i++){
+    
+  
+      if(now.merge(arr[i][1],arr[i][2])){
+        ans+=(arr[i][0]);count++;
+      }
+   }
+  
+   if(count==n-1)
+   cout<<ans<<endl;
+   else 
+   cout<<"IMPOSSIBLE"<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
 int t=1;
 while(t--){
-yeh_bhi_krr_lete_hain();
+solve();
 }
 }

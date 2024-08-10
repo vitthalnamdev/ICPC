@@ -23,9 +23,35 @@ return a <= 1 ? a : mod - (long long)(mod/a) * inv(mod % a) % mod;
 #define cntone(x) __builtin_popcountll(x)
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
+long long binpow(long long a, long long b, long long m) {
+    a %= m;
+    long long res = 1;
+    while (b > 0) {
+        if (b & 1)
+            res = res * a % m;
+        a = a * a % m;
+        b >>= 1;
+    }
+    return res;
+}
 void solve(){
    int n;cin>>n;
-   
+   vector<ll>dp(n+1 , 0);
+   for(ll i = 1;i<=n;i++){
+     dp[i] = (dp[i-1] + (i*i))*2;
+     dp[i]%=mod;
+   }
+   ll ans = 0;
+   ll cnt = 0;
+    
+   for(ll i=n-1;i>=1;i--)
+   {
+      ll now = binpow(2,cnt, mod);
+      ans+=(dp[i]*now);
+      ans%=mod;
+      cnt++;
+   }
+   cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
