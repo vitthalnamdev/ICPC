@@ -37,103 +37,62 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 
-ll cal(ll fele , ll sele){
-   map<ll,ll>ans;
-   int cnt = 0;
-   while(fele>0){
-     ans[fele] = cnt;
-     cnt++;
-     fele/=2;
-   }
-   cnt = 0;
-   while(sele>0){
-     if(ans[sele]>0){
-       return sele;
-     }
-     ans[sele] = cnt++;
-     sele/=2;
-   }
-   return 0;
+bool check(string s){
+    int n = s.length();
+    int prev = s[0]-'0';
+    for(int i=1;i<n;i++){
+        int num = (prev + s[i]-'0');
+
+        int curr = (s[i]-'0');
+        int cnt = 0;
+        if(num%2){
+          int newnum = num/2+1;
+          if(newnum==curr)cnt++;
+        }
+        int newnum = num/2;
+        if(newnum==curr)cnt++;
+        if(cnt==0){
+            return false;
+        }
+        prev = curr;
+    }
+    return true;
 }
-
 void yeh_bhi_krr_lete_hain(){
-  ll n;cin>>n;
-  ll arr[n];
-  for(int i=0;i<n;i++)cin>>arr[i];
-  int suff[n];  
-  int next = n;
-  bool f = 1;
-  for(int i = n-1;i>=0;i--)
-  {
-     suff[i] = next;
-     if(arr[i]!=-1)next = i;
-  }
-  vector<ll>ans(n,-1);
-  int i = 0;
-  for( i=0;i<n;i++){
-     if(arr[i]!=-1){
-        break;
-     }
-  }
-  if(i==n){
-    int now[2] = {1 , 2};
-    int cnt = 0;
-   for(int i=0;i<n;i++){
-      cout<<now[i%2]<<" ";
-   }cout<<endl;
-   return;
-  }else{
-    int cnt = arr[i];
-    int now = 0;
-     for(int j=i;j>=0;j--)
-     {
-       ans[j] = cnt;
-       if(now%2==0) cnt*=2;
-       else cnt/=2;
-     }
-  }
-  int j;
-  for( j = i;j<n;j++){
-    if(suff[i]==n){
-      break;
+ string s;cin>>s;
+ int n = s.length();
+ vector<vector<ll>>dp(n+1 , vector<ll>(10 , 0));
+ for(int i=0;i<10;i++){
+    dp[0][i] = 1;
+ }
+ for(int i=1;i<n;i++){
+    for(int j=0;j<10;j++){
+       if(dp[i-1][j]==0){continue;}
+       int num = j + (s[i]-'0');
+       
+       if(num%2){
+           int newnum = num/2 + 1; 
+           dp[i][newnum]+=(dp[i-1][j]); 
+       }
+           int newnum = num/2;
+           dp[i][newnum]+=(dp[i-1][j]);
     }
-    int lca = cal(arr[i] , arr[suff[i]]);
-    int next = suff[i];
-    int cnt = arr[i];
+ }
+   
+ 
 
-    while(j<next || cnt>lca){
-      ans[j++] = cnt;
-      cnt/=2;
-    }
-    int k = next;
-    cnt = arr[next];
-    while(k>j || cnt > lca){
-       ans[k--] = cnt;
-       cnt/=2;
-    }
-  }
-  bool mul = 1;
-  int cnt = arr[j-1];
-  while(j<n){
-      ans[j++] = cnt;
-    if(mul){
-      cnt*=2;
-      mul = 0;
-    }else{
-      cnt/=2;
-      mul = 1;
-    }
-  }
-  if(f){
-    for(int i=0;i<n;i++)cout<<ans[i]<<" ";
-    cout<<endl;
-  }else{
-     cout<<-1<<endl;
-  }
+ int ans = 0;
+ bool now = check(s);
+ 
+ for(int i=0;i<=9;i++){
+    ans+=(dp[n-1][i]);
+ }
+ ans-=(check(s));
+ cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 yeh_bhi_krr_lete_hain();
 }
