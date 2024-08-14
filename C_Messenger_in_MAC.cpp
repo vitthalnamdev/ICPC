@@ -36,8 +36,22 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-void yeh_bhi_krr_lete_hain(){
 
+bool cmp(pair<int,int>a , pair<int,int>b){
+  return a.second < b.second;
+}
+void yeh_bhi_krr_lete_hain(){
+   int n;cin>>n;
+   int l;cin>>l;
+   vector<pair<int,int>>arr(n);
+   for(int i = 0;i<n;i++)
+   {
+      int ans = 0;
+      for(int j= i+1;j<n;j++){
+         // I have to do it. But the thing is that, I am doing this thing for only fun. But 
+         // the thing is , how to solve it. That is the main question ? 
+      }
+   }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
