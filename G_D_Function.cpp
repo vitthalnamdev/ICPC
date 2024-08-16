@@ -36,21 +36,26 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-
-bool cmp(pair<int,int>a , pair<int,int>b){
-  return a.second < b.second;
+ll cal(int n , int val[] , int k  ){
+    val[k]++;
+    ll ans = (long long )(1LL*(binpow(val[k],n , mod) - 1)*inv(val[k] - 1))%mod;
+    val[k]--;
+    ans*=(1LL*val[k]);
+    ans%=mod;
+    return ans;
 }
 void yeh_bhi_krr_lete_hain(){
-   int n;cin>>n;
-   int l;cin>>l;
-   vector<pair<int,int>>arr(n);
-   for(int i = 0;i<n;i++)
-   {
-      int ans = 0;
-      for(int j= i+1;j<n;j++){
-        
-      }
-   }
+ ll l , r  , k; cin>>l>>r>>k;
+ if(k>=10){
+    cout<<0<<endl;return;
+ }else{
+    int val[10] = {0 , 9 , 4 , 3 , 2 , 1 , 1 , 1 ,1 ,1 };
+    ll valprev = cal(l , val , k);
+ 
+    ll valabove = cal(r, val , k); 
+       
+    cout<<(valabove-valprev  + mod)%mod<<endl;
+ }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

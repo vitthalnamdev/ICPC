@@ -14,6 +14,7 @@
         "valarray": "cpp",
         "functional": "cpp",
         "ostream": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "cmath": "cpp"
     }
 }

@@ -1,6 +1,10 @@
+// Don't look the rank , if you want a good rank
 #include<bits/stdc++.h>
 using namespace std;
-#define ll long long 
+  #define ll long long 
+#pragma GCC optimize("O3")
+#pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
+#pragma GCC optimize("unroll-loops")
 ////--------- DEBUG START---------////
 #define debug(x) cerr << #x <<" "; _print(x); cerr<< endl;
 void _print(int a){cerr<<a;}
@@ -13,68 +17,50 @@ template<class T>void _print(vector<T>&a){cerr<<"[ ";for(T i:a){_print(i);cerr<<
 template<class T>void _print(set<T>&a){cerr<<"[ ";for(T i:a){_print(i);cerr<<" ";}cerr<<" ]";}
 template<class T>void _print(multiset<T>&a){cerr<<"[ ";for(T i:a){_print(i);cerr<<" ";}cerr<<" ]";}
 ////------DEBUG END---------////
-int calculate(vector<vector<int>>&arr){
-   int ans = 0;
-   for(int i=0;i<arr.size();i++){
-      int now = 0;
-      for(int j=0;j<arr[0].size();j++){
-          now^=arr[i][j];
-      }
-      ans+=now;
-   }
-   for(int i=0;i<arr[0].size();i++){
-      int now = 0;
-      for(int j=0;j<arr.size();j++){
-        now^=(arr[j][i]);
-      }
-      ans+=now;
-   }
-   if(ans==0){
-      debug(arr);
-   }
+int mod = 1e9+7;
+ll inv(ll a) {
+return a <= 1 ? a : mod - (long long)(mod/a) * inv(mod % a) % mod;
 }
- 
-
-void print(vector<vector<int>>&arr)
+long long binpow(long long a, long long b, long long m) {
+a %= m;
+long long res = 1;
+while (b > 0) {
+if (b & 1)
+res = res * a % m;
+a = a * a % m;
+b >>= 1;
+}
+return res;
+}
+#define cntone(x) __builtin_popcountll(x)
+#define trailzero(x) __builtin_clzll(x)
+#define trailone(x) __builtin_ctzll(x)
+// flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+int check(int n)
 {
-   int n = arr.size();
-   int m = arr[0].size();
-
-   for(int i=0;i<n;i++)
-   {
-      for(int j=0;j<m;j++)cout<<arr[i][j]<<" ";cout<<endl;
+   int sum = 0;
+   while(n>0){
+      int rem = n%10;
+      sum+=rem;
+      n/=10;
    }
+   return sum;
 }
-
-
-void recursion(vector<vector<int>>&arr , int i ,int j){
-   int n = arr.size();
-   int m = arr[0].size();
-   if(i>=n){
-      return;
-   }
-   if(j>=m){
-      recursion(arr , i+1 , 0);
-   }
-   arr[i][j] = 1;
-   recursion(arr , i+1 , j);
-   arr[i][j] = 0;
-   recursion(arr , i+1 , j);
-}
- 
-void solve(){
-   vector<vector<int>>arr(4 , vector<int>(4 , 0));
-   for(int i=0;i<4;i++){
-      for(int j=0;j<4;j++){
-         cout<<arr[i][j]<<" ";
-      }cout<<endl;
-   }
-   
+void yeh_bhi_krr_lete_hain(){
+   int cnt = 0;
+   int k = 5;
+ for(int i=1;i<100;i++)
+ {
+    if(check(i*k)==(k*check(i))){
+        cnt++; 
+    }
+ }
+ cout<<cnt<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
 int t=1;
 while(t--){
-solve();
+yeh_bhi_krr_lete_hain();
 }
 }

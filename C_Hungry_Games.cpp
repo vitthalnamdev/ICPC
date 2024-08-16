@@ -36,21 +36,32 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-
-bool cmp(pair<int,int>a , pair<int,int>b){
-  return a.second < b.second;
-}
 void yeh_bhi_krr_lete_hain(){
-   int n;cin>>n;
-   int l;cin>>l;
-   vector<pair<int,int>>arr(n);
-   for(int i = 0;i<n;i++)
-   {
-      int ans = 0;
-      for(int j= i+1;j<n;j++){
-        
-      }
-   }
+ ll n , x;cin>>n>>x;
+ vector<ll>arr(n+1 , 0);
+ for(int i = n;i>=1;i--)cin>>arr[i];
+ 
+ vector<ll>suff(n+1 , 0);
+ for(int i=1;i<=n;i++)
+ {
+    suff[i] = suff[i-1] + arr[i];
+ }
+ 
+ vector<ll>dp(n+1, 0);
+ for(int i=1;i<=n;i++)
+ {
+   ll num = suff[i] - x;
+   int ind = lower_bound(suff.begin() , suff.end() , num) - suff.begin();
+ 
+     dp[i] = (ind-1>=0?dp[ind-1]:0) + (i - ind);
+ 
+ }
+ 
+ ll ans = 0;
+ for(int i = 1;i<=n;i++){
+     ans+=(dp[i]);
+ }
+ cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

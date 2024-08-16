@@ -36,21 +36,42 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+int totaltime = 0;
+// int activatetime = -1;
+int temp;
 
-bool cmp(pair<int,int>a , pair<int,int>b){
-  return a.second < b.second;
+int dfs(int node , int parent , vector<int>adj[] , int b , int level[])
+{  
+   temp--;
+    
+   if(temp>0){
+      totaltime++;
+   }
+   for(auto i: adj[node])
+   {
+      if(i==parent){continue;}
+      dfs(i , node , adj , b , level);
+   }
 }
 void yeh_bhi_krr_lete_hain(){
-   int n;cin>>n;
-   int l;cin>>l;
-   vector<pair<int,int>>arr(n);
-   for(int i = 0;i<n;i++)
+  totaltime = 0;
+  // activatetime = -1;
+  int n;
+   cin>>n;
+   temp = n;
+   ll ans = 0;
+   int level[n+1];
+   for(int i=0;i<=n;i++)level[i] = 0;
+   int a , b;cin>>a>>b;
+   vector<int>adj[n+1];
+   for(int i = 0; i < n-1;i++)
    {
-      int ans = 0;
-      for(int j= i+1;j<n;j++){
-        
-      }
+      int x , y;cin>>x>>y;
+      adj[x].push_back(y);
+      adj[y].push_back(x);
    }
+   dfs(a , -1 , adj , b , level);
+   
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

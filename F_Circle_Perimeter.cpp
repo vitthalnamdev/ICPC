@@ -36,22 +36,46 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-
-bool cmp(pair<int,int>a , pair<int,int>b){
-  return a.second < b.second;
+ 
+ll binary(ll i , ll r   )
+{
+   ll start = 1 , end = r;
+   while(end - start > 1){
+        ll mid = (start + end )/2;
+        double check= sqrt(mid*mid + i*i);
+        double val = (r);
+        if(check<val){
+            start= mid;
+        }else{
+            end = mid-1;
+        }
+   }
+   double check = sqrt(end*end+ i*i);
+   double check2 = sqrt(start*start + i*i);
+   double val = (r);
+   if(check<(val)){
+     return end;
+   }else if (check2 < val){
+     return start;
+   }else{
+     return start - 1;
+   }
+   
 }
 void yeh_bhi_krr_lete_hain(){
-   int n;cin>>n;
-   int l;cin>>l;
-   vector<pair<int,int>>arr(n);
-   for(int i = 0;i<n;i++)
-   {
-      int ans = 0;
-      for(int j= i+1;j<n;j++){
-        
-      }
-   }
-}
+   ll r;cin>>r;                             
+   ll ans = 0; 
+                               
+   for(int i=1;i<=r;i++){                   
+     ll lower = binary(i , r  );
+     ll upper = binary(i , r+1  );
+     
+     ans+=(max(0LL , upper - lower));
+   }         
+   ans = ans*4LL + 4;                                    
+   cout<<ans<<endl;                   
+}                                             
+                                                    
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
 int t;cin>>t;

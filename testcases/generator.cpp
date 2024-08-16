@@ -1,37 +1,27 @@
-#include <iostream>
-#include <vector>
-#include <unordered_set>
-#include <random>
-#include <algorithm>
+// C++ program to demonstrate generate function in STL 
+#include <bits/stdc++.h>	 
+using namespace std; 
 
-int main() {
-    const size_t arraySize = 100000;
-    const uint64_t minValue = 1;
-    const uint64_t maxValue = 1000000;
-    std::cout<<1<<std::endl;
-	std::cout<<arraySize<<std::endl;
-    // Create a random number generator
-    std::random_device rd;  // Obtain a random number from hardware
-    std::mt19937_64 eng(rd()); // Seed the generator
-    std::uniform_int_distribution<uint64_t> distr(minValue, maxValue);
+// function to generate random numbers in range [0-999] : 
+int randomize() 
+{ 
+	return (rand() % 51)+1; 
+} 
 
-    // Create a set to store unique numbers
-    std::unordered_set<uint64_t> uniqueNumbers;
+int main () 
+{ 
+// for different values each time we run the code 
+srand(time(NULL)); 
+cout<<1<<endl;
+int N = 200000;
 
-    // Generate unique random numbers
-    while (uniqueNumbers.size() < arraySize) {
-        uniqueNumbers.insert(distr(eng));   
-    }
-
-    // Transfer unique numbers to a vector
-    std::vector<uint64_t> array(uniqueNumbers.begin(), uniqueNumbers.end());
-
-    // Output the first 10 elements to verify
-     
-    for (size_t i = 0; i < arraySize; ++i) {
-        std::cout << array[i] << " ";
-    }
-    std::cout << std::endl;
-
-    return 0;
-}
+cout<<N<<endl;
+int k = rand()%N;
+cout<<k<<endl;
+for(int i=0;i<N;i++)
+{
+      int x = randomize();
+      cout<<x<<" ";
+}cout<<endl;
+return 0; 
+} 
