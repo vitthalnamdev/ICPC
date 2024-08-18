@@ -36,30 +36,12 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-int check(int n)
-{
-   int sum = 0;
-   while(n>0){
-      int rem = n%10;
-      sum+=rem;
-      n/=10;
-   }
-   return sum;
-}
 void yeh_bhi_krr_lete_hain(){
-   int cnt = 0;
-   int k = 5;
- for(int i=1;i<100;i++)
- {
-    if(check(i*k)==(k*check(i))){
-        cnt++; 
-    }
- }
- cout<<cnt<<endl;
+
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 yeh_bhi_krr_lete_hain();
 }
