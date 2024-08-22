@@ -33,47 +33,7 @@ b >>= 1;
 return res;
 }
 
-class Table
-{
-
-    // table(i,j) = max( table(i,j-1) , table(i+2^(j-1) , j-1));
-public:
-    void build(vector<ll> &arr, int n, vector<vector<ll>> &table)
-    {
-        for (int i = 0; i < n; i++)
-        {
-            table[i][0] = arr[i];
-        }
-        for (int j = 1; j < 20; j++)
-        {
-            for (int i = 0; i < n; i++)
-            {
-                int now = (i + (1 << (j - 1)));
-                if (now >= n)
-                {
-                    break;
-                }
-                table[i][j] = max(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);
-            }
-        }
-    }
-    int query(int l, int r, vector<vector<ll>> &table)
-    {
-        int sz = (r - l + 1);
-        int cnt = 0;
-        for (int i = 0; i < 20; i++)
-        {
-            int now = (1 << i);
-            if (now > sz)
-            {
-                cnt = i - 1;
-                break;
-            }
-        }
-        return max(table[l][cnt], table[r - (1 << cnt) + 1][cnt]);
-    }
-};
-
+ 
 #define cntone(x) __builtin_popcountll(x)
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
@@ -81,13 +41,30 @@ public:
 void yeh_bhi_krr_lete_hain(){
  int n , m;
  cin>>n>>m;
- vector<vector<int>>arr(n , vector<int>(m));
+ vector<vector<ll>>arr(n , vector<ll>(m));
  for(int i=0;i<n;i++){
     for(int j=0;j<m;j++){
         cin>>arr[i][j];
     }
  }
-
+  if((n+m)%2==0){
+    cout<<"NO"<<endl;return;
+  }
+  vector<vector<pair<ll,ll>>>dp(n+1, vector<pair<ll,ll>>(m+1,{INT_MIN,INT_MAX}));
+  dp[1][1].first = arr[0][0] , dp[1][1].second = arr[0][0];
+  for(int i=0;i<n;i++){
+    for(int j=0;j<m;j++){
+       if(i==0 && j==0)continue;
+       dp[i+1][j+1].first = max(dp[i][j+1].first + arr[i][j] , dp[i+1][j].first + arr[i][j]);
+       dp[i+1][j+1].second = min(dp[i][j+1].second + arr[i][j] , dp[i+1][j].second + arr[i][j]);
+    }
+  }
+  
+    if(dp[n][m].second>0 || dp[n][m].first < 0){
+        cout<<"NO"<<endl;
+    }else{
+        cout<<"YES"<<endl;
+    }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

@@ -33,46 +33,72 @@ b >>= 1;
 return res;
 }
 
+class segment{
+  vector<int>tree;
+  int n ;
+  public:
+  segment(ll n){
+     this->n = n;
+     tree.assign(4*n+4 , INT_MAX);
+  }
+  int build(vector<ll>&arr , int l , int r , int ind)
+  {
+     if(l==r){return tree[ind] = arr[l];}
+     int mid = (l+r)/2;
+     int left = build(arr , l , mid , 2*ind+1);
+     int right = build(arr , mid+1 , r , 2*ind+2);
+     return tree[ind] = min(left , right);
+  }
+  int query(int l , int r , int a , int b , int ind)
+  { 
+    if(l>b || r<a){return INT_MAX;} 
+    if(l>=a && r<=b){return tree[ind];}
+    int mid = (l+r)/2;
+    int left = query(l , mid , a , b , 2*ind+1);
+    int right = query(mid +1 , r , a , b , 2*ind+2);
+    return min(left , right);
+  }
+  ll update(int l ,int r , int i , int ind , int val)
+  {
+      if(l>i || r<i){return tree[ind];}
+      if(l==r && l==i){
+         return tree[ind] = val;
+      }
+      int mid = (l+r)/2;
+      int left = update(l , mid , i , 2*ind+1 , val);
+      int right = update(mid+1 ,r , i , 2*ind+2 , val);
+      return tree[ind] = min(left , right);
+  }
+};
 
-int longestValidParentheses(string s) {
-    int n = s.length();
-    vector<int>dp(n+1,0);
-    int a = 0;
-    int ans = 0;
-    for(int i=0;i<n;i++){
-        if(s[i]=='(')a++;
-        else a--;
-        if(a<0){
-            int x = 0;
-            for(int i=0;i<=n;i++){
-                ans = max(ans , dp[i]);
-                dp[i] = 0;
-            }
-            ans = max(ans , x);
-            a = 0;
-            continue;
-        }
-        if(s[i]==')'){
-            dp[a]+=dp[a+1]+2; 
-            dp[a+1] = 0;
-        }
-    //  debug(dp)
-    }
-    for(int i=0;i<=n;i++)ans = max(ans , dp[i]);
-     //ans = max(ans ,x);
-    return ans;
-}
 #define cntone(x) __builtin_popcountll(x)
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void yeh_bhi_krr_lete_hain(){
-string s;cin>>s;
- cout<<longestValidParentheses(s)<<endl;
+  int n , q;cin>>n>>q;
+  vector<ll>arr(n);
+  for(int i=0;i<n;i++)cin>>arr[i];
+  segment seg = segment(n);
+  seg.build(arr,0,n-1 , 0);
+  while(q--)
+  {
+       int query;cin>>query;
+       if(query==1)
+       {
+           int ind , x;cin>>ind>>x;
+           arr[ind-1] = x;
+           seg.update(0, n-1 , ind-1 , 0 , x);
+           
+       }else{
+           int a , b;cin>>a>>b;
+           cout<<seg.query(0,n-1 , a-1 , b-1 , 0)<<endl;
+       }
+  }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 yeh_bhi_krr_lete_hain();
 }

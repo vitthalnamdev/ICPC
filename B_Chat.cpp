@@ -32,47 +32,50 @@ b >>= 1;
 }
 return res;
 }
-
-
-int longestValidParentheses(string s) {
-    int n = s.length();
-    vector<int>dp(n+1,0);
-    int a = 0;
-    int ans = 0;
-    for(int i=0;i<n;i++){
-        if(s[i]=='(')a++;
-        else a--;
-        if(a<0){
-            int x = 0;
-            for(int i=0;i<=n;i++){
-                ans = max(ans , dp[i]);
-                dp[i] = 0;
-            }
-            ans = max(ans , x);
-            a = 0;
-            continue;
-        }
-        if(s[i]==')'){
-            dp[a]+=dp[a+1]+2; 
-            dp[a+1] = 0;
-        }
-    //  debug(dp)
-    }
-    for(int i=0;i<=n;i++)ans = max(ans , dp[i]);
-     //ans = max(ans ,x);
-    return ans;
-}
 #define cntone(x) __builtin_popcountll(x)
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void yeh_bhi_krr_lete_hain(){
-string s;cin>>s;
- cout<<longestValidParentheses(s)<<endl;
+int n , k;cin>>n>>k;
+vector<int>messages(n+1);
+for(int i=1;i<=n;i++){
+    cin>>messages[i];
 }
+vector<int>dp(n+1 , 0);
+for(int i=1;i<=n;i++){
+  if(messages[i]==0){
+       dp[i] =  min(n , i+k) - max(1 , i-k) +1;
+  }else{
+   dp[i] = dp[messages[i]] + min(n , i+k) - min(n,max(max(1 , i-k) , messages[i]+k)); 
+   if(min(n , messages[i]+k) < max(1 , i-k))dp[i]++;
+  }
+}
+for(int i=1;i<=n;i++){  
+    cout<<dp[i]<<" ";
+}cout<<endl;
+}
+
+
+/*
+   i am on ith index , i can read i-k to i+k messages total of i+k-(i-k) = k+k+1; total without going to link 
+   //  dp[arr[i]]  + 2*k + 1;
+   // but there is overcount 
+   // dp[i] = dp[arr[i]] + (min(n , i+k) - max((i-k , arr[i]+k)); 
+   // if(arr[i]+k < i-k)dp[i]++;
+
+*/
+
+
+/*
+2 0
+0 1
+
+
+*/
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 yeh_bhi_krr_lete_hain();
 }

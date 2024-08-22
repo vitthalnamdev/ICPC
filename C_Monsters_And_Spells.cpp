@@ -32,43 +32,28 @@ b >>= 1;
 }
 return res;
 }
-
-
-int longestValidParentheses(string s) {
-    int n = s.length();
-    vector<int>dp(n+1,0);
-    int a = 0;
-    int ans = 0;
-    for(int i=0;i<n;i++){
-        if(s[i]=='(')a++;
-        else a--;
-        if(a<0){
-            int x = 0;
-            for(int i=0;i<=n;i++){
-                ans = max(ans , dp[i]);
-                dp[i] = 0;
-            }
-            ans = max(ans , x);
-            a = 0;
-            continue;
-        }
-        if(s[i]==')'){
-            dp[a]+=dp[a+1]+2; 
-            dp[a+1] = 0;
-        }
-    //  debug(dp)
-    }
-    for(int i=0;i<=n;i++)ans = max(ans , dp[i]);
-     //ans = max(ans ,x);
-    return ans;
-}
 #define cntone(x) __builtin_popcountll(x)
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void yeh_bhi_krr_lete_hain(){
-string s;cin>>s;
- cout<<longestValidParentheses(s)<<endl;
+int n;cin>>n;
+vector<ll>time(n+1);
+for(int i=1;i<=n;i++)cin>>time[i];
+time[0] = 0;
+vector<ll>health(n+1);
+for(int i=1;i<=n;i++){
+ cin>>health[i];
+}
+  ll ans = 0;
+  vector<ll>dp(n+1 ,0);
+  ll prev = 0;
+  for(int i=1;i<=n;i++)
+  {
+    
+  }
+
+   cout<<dp[n]<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
