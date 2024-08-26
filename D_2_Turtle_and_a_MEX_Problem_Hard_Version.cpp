@@ -37,18 +37,65 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
-  int ans = 0;
-  for(int i=1;i<1000;i++)
-  {
-     if(i%3==0 || i%5==0){
-        ans+=i;
-     }
-  }
-  cout<<ans<<endl;
+ll n , m;cin>>n>>m;
+vector<set<int>>arr;
+map<ll,ll>mx;
+ll val = 0;
+int sz = 0;
+int t =0;
+vector<pair<ll,ll>>value;
+for(int i=0;i<n;i++)
+{
+    int x;cin>>x;
+    set<ll>s;
+    for(int j=0;j<=x+1;j++){
+       s.insert(j);
+    }
+    for(int j=0;j<x;j++)
+    {
+       int y;cin>>y;
+       auto ele = s.find(y);
+       if(ele!=s.end())
+       s.erase(ele);
+    }
+    
+    ll mex = *s.begin();
+    t = max((ll)t , mex);
+    s.erase(s.begin());
+    ll now = *s.begin();
+    val = max(val , now);
+    value.push_back({mex , now});
+}
+vector<int>dp(val+1 , 0);
+vector<int>adj[val+1];
+for(auto i:value)
+{
+     adj[i.first].push_back(i.second);
+}
+
+for (int u = val; u>=0; --u) {
+		dp[u] = u;
+		for (int v : adj[u]) {
+			dp[u] = max(dp[u], dp[v]);
+		}
+		if ((int)adj[u].size() >= 2) {
+			t = max(t, dp[u]);
+		}
+	}
+
+ll ans = 0;
+ans+=(m*(m+1))/2;
+ans-=(val*(val+1))/2;
+ans = max(ans , 0LL);
+ val = min(val , m);
+ for(int i=0;i<=val;i++){
+    ans+=max(t , dp[i]);
+ }
+cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

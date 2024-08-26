@@ -36,20 +36,79 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+
+
+
+
+
 void solve(){
-  int ans = 0;
-  for(int i=1;i<1000;i++)
-  {
-     if(i%3==0 || i%5==0){
-        ans+=i;
-     }
-  }
-  cout<<ans<<endl;
+ int n;cin>>n;int m;cin>>m;
+ vector<vector<int>>edges(n);
+ for(int i=0;i<m;i++)
+ {
+    int a , b , c;cin>>a>>b>>c;
+    edges[i] = {a , b , -c};
+ }
+
+}
+
+class node{
+    public:
+    int data;
+    node*left;node*right;
+    node(int val)
+    {
+        data = val;
+        left = NULL;
+        right = NULL;
+    }
+};
+int ind=0;
+node* buildinorder(vector<int>&tree)
+{
+    int n = tree.size();
+    if(ind>=n){
+        return NULL;
+    }
+   if(tree[ind]==-1){
+     return NULL;
+   }
+
+   node*curr = new node(tree[ind]);
+   ind++;
+   curr->left = buildinorder(tree);
+   ind++;
+   curr->right = buildinorder(tree);
+   return curr;
+}
+
+node* buildpreorder(vector<int>&tree)
+{
+    int n = tree.size();
+    if(ind>=n){
+        return NULL;
+    }
+    if(tree[ind]==-1){
+        return NULL;
+    }
+    node*curr = new node(-1);
+    curr->left = buildpreorder(tree);
+    curr->data = tree[ind];
+    ind++;
+    curr->right = buildpreorder(tree);
+    return curr;
+}
+void printpreorder(node * root)
+{
+    if(root==NULL)return;
+    printpreorder(root->left);
+    cout<<root->data<<" ";
+    printpreorder(root->right);
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
-while(t--){
-solve();
-}
+vector<int>order = {1 , 2 , 3};
+  node*root =  buildpreorder(order);
+  
+//   printpreorder(root);
 }

@@ -37,14 +37,59 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
-  int ans = 0;
-  for(int i=1;i<1000;i++)
-  {
-     if(i%3==0 || i%5==0){
-        ans+=i;
-     }
-  }
-  cout<<ans<<endl;
+ int n;cin>>n;
+ int sq=0 , rec = 0;
+ vector<int>count(100005 , 0);
+ for(int i=0;i<n;i++){
+    int x;cin>>x;
+    count[x]++;
+ }
+ for(int i=1;i<=100000;i++)
+ {
+     
+        sq+=(count[i]/4);
+        int rem = count[i]%4;
+        if(rem>=2){
+            rec++;
+        }
+ }
+ int q;cin>>q;
+ while(q--)
+ {
+    char a;int num;
+    cin>>a>>num;
+    if(a=='+')
+    {
+       sq-=(count[num]/4);
+       int rem = count[num]%4;
+       rec-=(rem>=2);
+       count[num]++;
+     
+        sq+=(count[num]/4);
+          rem = count[num]%4;
+        if(rem>=2){
+            
+            rec++;
+        }
+    }else{
+       sq-=(count[num]/4);
+       int rem = count[num]%4;
+       rec-=(rem>=2);
+       count[num]--;
+       sq+=(count[num]/4);
+         rem = count[num]%4;
+        if(rem>=2){
+            rec++;
+        }
+    }
+     
+    if(sq>=2 || (sq>=1 &&  rec>=2))
+    {
+        cout<<"YES"<<endl;
+    }else{
+        cout<<"NO"<<endl;
+    }
+ }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

@@ -24,8 +24,32 @@ return a <= 1 ? a : mod - (long long)(mod/a) * inv(mod % a) % mod;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 void solve(){
-  
- 
+  int n;cin>>n;
+  vector<pair<int,int>>arr(n);
+  for(int i=0;i<n;i++)cin>>arr[i].first , arr[i].second = i;
+  sort(arr.begin(),arr.end());
+  int p1 = 0;int p2 = n-1;
+  int val = n;
+  vector<int>ans(n);
+  while(p2>=p1){
+     if((n-p1==arr[p2].first)^(n-p2-1==arr[p1].first))
+     { 
+      
+        if(arr[p2].first==n-p1){
+          ans[arr[p2--].second] = val--;
+        }else{
+          ans[arr[p1++].second] = -(val--);
+        }
+     }else{
+        cout<<"NO"<<endl;
+        return;
+     }
+  }
+  cout<<"YES"<<endl;
+  for(auto i:ans){
+    cout<<i<<" ";
+  }
+  cout<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

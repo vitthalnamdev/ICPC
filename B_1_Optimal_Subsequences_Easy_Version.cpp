@@ -1,3 +1,4 @@
+// Don't look the rank , if you want a good rank
 #include<bits/stdc++.h>
 using namespace std;
   #define ll long long 
@@ -20,19 +21,48 @@ int mod = 1e9+7;
 ll inv(ll a) {
 return a <= 1 ? a : mod - (long long)(mod/a) * inv(mod % a) % mod;
 }
+long long binpow(long long a, long long b, long long m) {
+a %= m;
+long long res = 1;
+while (b > 0) {
+if (b & 1)
+res = res * a % m;
+a = a * a % m;
+b >>= 1;
+}
+return res;
+}
 #define cntone(x) __builtin_popcountll(x)
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
-void yeh_bhi_krr_lete_hain(){
-  int n;cin>>n;
-  vector<int>arr(n);
-  for(int i=0;i<n;i++)cin>>arr[i];
+// flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+void solve(){
+ int n;cin>>n;
+ vector<pair<int,int>>arr(n);
+ vector<int>a(n);
+ for(int i=0;i<n;i++){
+    cin>>arr[i].first;
+    a[i] = arr[i].first;
+    arr[i].second = i;
+    arr[i].first*=-1;
+ }
+ sort(arr.begin() , arr.end());
+ int m;cin>>m;
+ for(int i=0;i<m;i++)
+ {
+   int s,pos;cin>>s>>pos;
+//    cout<<s<<" "<<pos<<endl;
+   vector<int>brr;
+   for(int j=0;j<s;j++)brr.push_back(arr[j].second);
+   sort(brr.begin(), brr.end());
+   cout<<a[brr[pos-1]]<<endl;
+ }
   
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
-yeh_bhi_krr_lete_hain();
+solve();
 }
 }

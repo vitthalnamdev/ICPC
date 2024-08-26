@@ -91,41 +91,50 @@ pair<int,int> bfs(int x , int y , vector<string>&arr  ){
         auto top = q.front();
         q.pop();
         int i = top.first;int j = top.second;
+        if(vis[i][j]){
+            continue;
+        }
+        vis[i][j] = 1;
         for(auto k:dir){ 
             if(istrue (i+k , j , arr) && timer[i+k][j]>dist[i][j]+1 && !vis[i+k][j]){
                 parent[i+k][j] = {i,j};
                 q.push({i+k ,j});
-                dist[i+k][j] = dist[i][j]+1;
+                dist[i+k][j] = min(dist[i+k][j] , dist[i][j]+1);
             }
             if(istrue (i , j+k , arr) && timer[i][j+k]>dist[i][j]+1 && !vis[i][j+k]){
                 parent[i][j+k] = {i,j};
                 q.push({i,j+k});
-                dist[i][j+k] = dist[i][j]+1;
+                dist[i][j+k] = min(dist[i][j+k] , dist[i][j]+1);
             }
         }
     }
     int ans = INT_MAX;
     pair<int,int>end={-1,-1};
     for(int i=0;i<n;i++){
-       if(arr[i][0]<ans){
-        ans = arr[i][0];
+       if(dist[i][0]<ans){
+        // cout<<i<<" "<<0<<endl;
+        ans = dist[i][0];
         end = {i,0};
        }
-       if(arr[i][m-1]<ans){
-         ans= arr[i][m-1];
+       if(dist[i][m-1]<ans){
+        // cout<<i<<" "<<m-1<<endl;
+         ans= dist[i][m-1];
          end = {i,m-1};
        }
     }
     for(int i=0;i<m;i++){
-        if(arr[0][i]<ans){
+        if(dist[0][i]<ans){
+            // cout<<0<<" "<<i<<endl;
             ans = arr[0][i];
             end = {0,i};
         }
-        if(arr[n-1][i]<ans){
+        if(dist[n-1][i]<ans){
+            // cout<<n-1<<" "<<i<<endl;
             ans = arr[n-1][i];
             end = {n-1,i};
         }
     }
+  
     return end;
 }
 
@@ -174,11 +183,12 @@ void solve(){
     }
   }
   auto end = bfs(start.first , start.second , arr);
+  
   if(end==make_pair(-1,-1)){
         cout<<"NO"<<endl;
   }else{
        cout<<"YES"<<endl;
-        getpath(start , end);
+       getpath(start , end);
   }
 
 }
