@@ -36,78 +36,61 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-vector<int>adj[200010];
-vector<int>from(200010 , -1);
-vector<int>par(200010,-1);
-vector<int>result;
-bool dfs(int node , int s , int parent , int parentnode)
-{
-  if(node==s){
-    return false;
-  }
-   for(auto i:adj[node])
-   {
-       
-       if(from[i]==-1){
-         par[i] = node;
-         from[i] = parent;
-         if(s==node){
-            bool now = dfs(i ,s, i , node);
-            if(now==true){
-               result.push_back(node);
-               return true;
-            }
-         }else{
-            bool now =  dfs(i,s , parent , node);
-            if(now==true){
-               result.push_back(node);return true;
-            }
-         }
-       }else if(from[i]!=parent){
-          result.push_back(i);
-          result.push_back(node);
-          return true;
-       }
-   }
-   return false;
-}
-
-void solve(){
- int n , m , s;cin>>n>>m>>s;
- for(int i=0;i<m;i++)
- {
-   int a , b ;cin>>a>>b;
-   adj[a].push_back(b);
- }
- bool ans2 = false;
- for(auto i:adj[s])
- {
-   ans2 = dfs( i , s , i , s);
-   if(ans2)break;
- }
- if(ans2==false){
-   cout<<"Impossible"<<endl;
-   return;
- }
+vector<pair<int,int>>adj[100010];
+//   vector<ll>dist(100010 , LLONG_MAX);
+  vector<vector<ll>>dp(100010 , vector<ll>(2 ,LLONG_MAX));
+ vector<int>vis(100010,0);
+void shortest_path(int node){
+  set<pair<ll,int>>s;
+  s.insert({LLONG_MAX,node});
+  dp[1][0] = 0;
+  dp[1][1] = 0;
  
-  vector<int>ans;
-  int val = result[0];
-  while(val!=-1){
-  // cout<<val<<endl;
-     ans.push_back(val);
-     val = par[val];
-  }
-  cout<<"Possible"<<endl;
-  reverse(ans.begin(),ans.end());
-  reverse(result.begin(),result.end());
-  cout<<ans.size()<<endl;
-  for(auto i:ans){
-   cout<<i<<" ";
-  }cout<<endl;
-  cout<<result.size()<<endl;
-  for(auto i:result)
+  while(!s.empty())
   {
-   cout<<i<<" ";
+     auto top = *s.begin();   
+     s.erase(s.begin());
+     if(vis[top.second]){
+        continue;
+     }
+     vis[top.second] = 1;
+     for(auto i:adj[top.second])
+     {  
+        if(dp[top.second][0]!=LLONG_MAX && dp[i.first][0] > dp[top.second][0] + i.second)
+        {
+            dp[i.first][0] = dp[top.second][0] + i.second;
+            s.insert({dp[i.first][0] , i.first});
+        }
+        if(dp[i.first][0]!=LLONG_MAX){
+            ll now =  min(dp[i.first][1] , dp[i.first][0]) + i.second;
+            if(dp[top.second][1] > now)
+            dp[top.second][1] = now;
+        }
+     }   
+  }
+}
+// 
+void solve(){
+  int n,m;cin>>n>>m;
+  for(int i=0;i<m;i++)
+  {
+    int a , b ,c;cin>>a>>b>>c;
+   
+    adj[a].push_back({b,c});
+  }
+  for(int i=1;i<=n;i++){
+    if(!vis[i]){
+        shortest_path(i);
+    }
+  }
+ 
+  for(int i=2;i<=n;i++){
+    ll mn = min(dp[i][0] , dp[i][1]);   
+    if(mn==LLONG_MAX){
+        cout<<-1<<" ";
+    }else{
+        cout<<mn<<" ";
+    }
   }cout<<endl;
 }
 int main(){

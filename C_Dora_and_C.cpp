@@ -36,83 +36,47 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-vector<int>adj[200010];
-vector<int>from(200010 , -1);
-vector<int>par(200010,-1);
-vector<int>result;
-bool dfs(int node , int s , int parent , int parentnode)
+int check(ll mid , vector<ll>&arr , ll a, ll b)
 {
-  if(node==s){
-    return false;
-  }
-   for(auto i:adj[node])
-   {
-       
-       if(from[i]==-1){
-         par[i] = node;
-         from[i] = parent;
-         if(s==node){
-            bool now = dfs(i ,s, i , node);
-            if(now==true){
-               result.push_back(node);
-               return true;
-            }
-         }else{
-            bool now =  dfs(i,s , parent , node);
-            if(now==true){
-               result.push_back(node);return true;
-            }
-         }
-       }else if(from[i]!=parent){
-          result.push_back(i);
-          result.push_back(node);
-          return true;
-       }
+   int n = arr.size();
+   int x = __gcd(a , b);
+   for(int i=0;i<n;i++){
+      arr[i]%=x;
    }
-   return false;
+   ll ans = INT_MAX;
+ 
+   
+   set<ll>s;
+   for(int i=0;i<n;i++){
+        s.insert(arr[i]);
+
+   }
+   for(int i=0;i<=s.size();i++){
+      ll top = *s.begin();
+      auto mx = s.end();
+      mx--;
+      ans = min(ans , *mx - top);
+      s.erase(s.begin());
+      top+=x;
+      s.insert(top);
+   }
+  return ans;
+
 }
 
+
 void solve(){
- int n , m , s;cin>>n>>m>>s;
- for(int i=0;i<m;i++)
- {
-   int a , b ;cin>>a>>b;
-   adj[a].push_back(b);
- }
- bool ans2 = false;
- for(auto i:adj[s])
- {
-   ans2 = dfs( i , s , i , s);
-   if(ans2)break;
- }
- if(ans2==false){
-   cout<<"Impossible"<<endl;
-   return;
- }
- 
-  vector<int>ans;
-  int val = result[0];
-  while(val!=-1){
-  // cout<<val<<endl;
-     ans.push_back(val);
-     val = par[val];
-  }
-  cout<<"Possible"<<endl;
-  reverse(ans.begin(),ans.end());
-  reverse(result.begin(),result.end());
-  cout<<ans.size()<<endl;
-  for(auto i:ans){
-   cout<<i<<" ";
-  }cout<<endl;
-  cout<<result.size()<<endl;
-  for(auto i:result)
-  {
-   cout<<i<<" ";
-  }cout<<endl;
+    ll n , a , b;cin>>n>>a>>b;
+    vector<ll>arr(n);
+    for(int i=0;i<n;i++)cin>>arr[i];
+   
+    ll ans = check(0 , arr , a , b);
+    cout<<ans<<endl;
+   
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

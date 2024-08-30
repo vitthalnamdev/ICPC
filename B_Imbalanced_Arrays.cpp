@@ -34,7 +34,6 @@ void solve(){
   while(p2>=p1){
      if((n-p1==arr[p2].first)^(n-p2-1==arr[p1].first))
      { 
-      
         if(arr[p2].first==n-p1){
           ans[arr[p2--].second] = val--;
         }else{

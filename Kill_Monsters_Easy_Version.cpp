@@ -32,87 +32,57 @@ b >>= 1;
 }
 return res;
 }
+//
 #define cntone(x) __builtin_popcountll(x)
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-vector<int>adj[200010];
-vector<int>from(200010 , -1);
-vector<int>par(200010,-1);
-vector<int>result;
-bool dfs(int node , int s , int parent , int parentnode)
-{
-  if(node==s){
-    return false;
-  }
-   for(auto i:adj[node])
-   {
-       
-       if(from[i]==-1){
-         par[i] = node;
-         from[i] = parent;
-         if(s==node){
-            bool now = dfs(i ,s, i , node);
-            if(now==true){
-               result.push_back(node);
-               return true;
-            }
-         }else{
-            bool now =  dfs(i,s , parent , node);
-            if(now==true){
-               result.push_back(node);return true;
-            }
-         }
-       }else if(from[i]!=parent){
-          result.push_back(i);
-          result.push_back(node);
-          return true;
-       }
-   }
-   return false;
-}
-
 void solve(){
- int n , m , s;cin>>n>>m>>s;
- for(int i=0;i<m;i++)
- {
-   int a , b ;cin>>a>>b;
-   adj[a].push_back(b);
- }
- bool ans2 = false;
- for(auto i:adj[s])
- {
-   ans2 = dfs( i , s , i , s);
-   if(ans2)break;
- }
- if(ans2==false){
-   cout<<"Impossible"<<endl;
-   return;
+ ll n , x, k;cin>>n>>x>>k;
+ vector<ll>health(n);
+ for(int i=0;i<n;i++)cin>>health[i];
+ sort(health.begin(),health.end());
+  
+vector<int>distinct(n+1,0);
+ set<int>s;
+ for(int i=0;i<n;i++){
+   s.insert(health[i]);
+   distinct[i] = s.size();
+ } 
+ 
+ ll ans = 0;
+ vector<int>count(501,0);
+ for(int i=0;i<n;i++){
+    count[health[i]]++;
  }
  
-  vector<int>ans;
-  int val = result[0];
-  while(val!=-1){
-  // cout<<val<<endl;
-     ans.push_back(val);
-     val = par[val];
-  }
-  cout<<"Possible"<<endl;
-  reverse(ans.begin(),ans.end());
-  reverse(result.begin(),result.end());
-  cout<<ans.size()<<endl;
-  for(auto i:ans){
-   cout<<i<<" ";
-  }cout<<endl;
-  cout<<result.size()<<endl;
-  for(auto i:result)
-  {
-   cout<<i<<" ";
-  }cout<<endl;
+ 
+ ll result = 0;
+ int single = 0;
+ vector<int>help(n+1,0);
+ int singletaken = 0;
+ for(int i=n-1;i>=0;i--){
+    if(count[health[i]]==1){
+        single++;
+    }
+    help[i] = single;
+    if(x>health[i]){
+       if(count[health[i]]==1)singletaken++;
+        ans++;
+        x = health[i];
+    }else{
+        
+        int ind = lower_bound(health.begin(),health.end(),x*k)-health.begin();
+        //from i to ind-1 the single values that i have taken already.
+        result = max(result , ans + ((ind-1>=0?distinct[ind-1]:0)) - max(0,(singletaken - help[ind])));
+        
+    }
+ }
+cout<<result<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }
