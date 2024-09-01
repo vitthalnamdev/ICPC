@@ -36,63 +36,45 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-vector<pair<int,int>>adj[100010];
-//   vector<ll>dist(100010 , LLONG_MAX);
-vector<ll>dp(200010,LLONG_MAX);
-vector<int>vis(100010,0);
- 
-void shortest_path(int node){
-  set<pair<ll,int>>s;
-  s.insert({0,node});
- 
-  while(!s.empty())
-  {
-     auto top = *(s.begin());   
-     s.erase(s.begin());
-     if(vis[top.second]){
-        continue;
-     }
-     vis[top.second] = 1;
-     for(auto i:adj[top.second])
-     {  
-        if(top.second==6){
-          cout<<"HELLO"<<endl;
-        }
-        if(dp[top.second]!=LLONG_MAX && dp[i.first] > dp[top.second] + i.second)
-        {
-           
-            dp[i.first] = dp[top.second] + i.second;
-            s.insert({dp[i.first] , i.first});
-        }
-     }   
-  }
+bool check(int mid , vector<pair<int,int>>&arr , int n)
+{
+    int p2 = mid-1;int p1 = 0;
+    int cnt = 0;
+      
+    for(int i=0;i<n;i++){
+       if(arr[i].first>=p2 && arr[i].second>=p1){
+         p1++;p2--;cnt++;   
+       }
+        
+    }
+   
+    return cnt>=mid;
 }
 void solve(){
-  int n,m;cin>>n>>m;
-  dp[1] = 0;
-  for(int i=0;i<m;i++)
-  {
-    int a , b ,c;cin>>a>>b>>c; 
-    adj[a].push_back({b,c});
-    adj[a+n].push_back({b+n,c});
-  }
- for(int i=1;i<=n;i++){
-    adj[i].push_back({i+n,0});
+ int n;cin>>n;
+ vector<pair<int,int>>arr(n);
+ for(int i=0;i<n;i++){
+    cin>>arr[i].first>>arr[i].second;
  }
-  shortest_path(1);
  
-  for(int i=2;i<=n;i++){
-    ll mn = min(dp[i] , dp[i+n]);  
-    if(mn==LLONG_MAX){
-        cout<<-1<<" ";
+ int start = 1 , end = n;
+ while(end-start>1){
+    int mid = (start+end)/2;
+    if(check(mid,arr , n)){
+        start = mid;
     }else{
-        cout<<mn<<" ";
+        end = mid-1;
     }
-  }cout<<endl;
+ }
+ if(check(end , arr , n)){
+    cout<<end<<endl;
+ }else{
+    cout<<start<<endl;
+ }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

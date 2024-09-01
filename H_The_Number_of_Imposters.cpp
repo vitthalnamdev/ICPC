@@ -36,63 +36,66 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-vector<pair<int,int>>adj[100010];
-//   vector<ll>dist(100010 , LLONG_MAX);
-vector<ll>dp(200010,LLONG_MAX);
-vector<int>vis(100010,0);
- 
-void shortest_path(int node){
-  set<pair<ll,int>>s;
-  s.insert({0,node});
- 
-  while(!s.empty())
-  {
-     auto top = *(s.begin());   
-     s.erase(s.begin());
-     if(vis[top.second]){
-        continue;
-     }
-     vis[top.second] = 1;
-     for(auto i:adj[top.second])
-     {  
-        if(top.second==6){
-          cout<<"HELLO"<<endl;
-        }
-        if(dp[top.second]!=LLONG_MAX && dp[i.first] > dp[top.second] + i.second)
-        {
-           
-            dp[i.first] = dp[top.second] + i.second;
-            s.insert({dp[i.first] , i.first});
-        }
-     }   
-  }
+int ans = 0;
+bool dfs(int node , vector<pair<int,int>>adj[] , vector<int>&vis , vector<int>&color)
+{
+   if(color[node]==1){
+      ans++;
+   }
+   vis[node] = 1;
+   for(auto i:adj[node])
+   {
+      if(!vis[i.first]){
+         color[i.first] = color[node]^i.second;    
+         bool now = dfs(i.first , adj , vis , color);
+         if(now){return true;}
+      }else if(vis[i.first] && color[i.first]!=i.second^(color[node]))
+      {
+         return true;
+      }
+   }
+   return false;    
 }
 void solve(){
-  int n,m;cin>>n>>m;
-  dp[1] = 0;
-  for(int i=0;i<m;i++)
-  {
-    int a , b ,c;cin>>a>>b>>c; 
-    adj[a].push_back({b,c});
-    adj[a+n].push_back({b+n,c});
-  }
- for(int i=1;i<=n;i++){
-    adj[i].push_back({i+n,0});
- }
-  shortest_path(1);
- 
-  for(int i=2;i<=n;i++){
-    ll mn = min(dp[i] , dp[i+n]);  
-    if(mn==LLONG_MAX){
-        cout<<-1<<" ";
-    }else{
-        cout<<mn<<" ";
+    ans = 0;
+    int n ,m;cin>>n>>m;
+    vector<pair<int,int>>adj[n+1];
+    for(int i=0;i<m;i++){
+        int a , b;string c;cin>>a>>b>>c;
+        if(c=="imposter")
+        {
+          adj[a].push_back({b , 1});
+          adj[b].push_back({a , 1});
+        }else{
+          adj[a].push_back({b , 0});
+          adj[b].push_back({a , 0});
+        }
     }
-  }cout<<endl;
+    vector<int>vis(n+1 , 0);
+    vector<int>vis2(n+1 , 0);
+    vector<int>color(n+1 , 1);
+    vector<int>color2(n+1 , 0);
+    int result = 0;
+    for(int i=1;i<=n;i++){
+        if(!vis[i]){
+            int temp = 0;
+            ans = 0;
+            bool now1 = dfs(i , adj , vis , color);
+            temp = max(temp , ans);
+            ans = 0; 
+            bool now2 = dfs(i , adj , vis2 , color2);
+            temp = max(temp , ans);
+            result += temp;
+            if(now1&now2){
+                cout<<-1<<endl;return;
+            }
+        } 
+    }
+    cout<<result<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

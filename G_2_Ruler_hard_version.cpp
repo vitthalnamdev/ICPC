@@ -36,63 +36,39 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-vector<pair<int,int>>adj[100010];
-//   vector<ll>dist(100010 , LLONG_MAX);
-vector<ll>dp(200010,LLONG_MAX);
-vector<int>vis(100010,0);
- 
-void shortest_path(int node){
-  set<pair<ll,int>>s;
-  s.insert({0,node});
- 
-  while(!s.empty())
-  {
-     auto top = *(s.begin());   
-     s.erase(s.begin());
-     if(vis[top.second]){
-        continue;
-     }
-     vis[top.second] = 1;
-     for(auto i:adj[top.second])
-     {  
-        if(top.second==6){
-          cout<<"HELLO"<<endl;
-        }
-        if(dp[top.second]!=LLONG_MAX && dp[i.first] > dp[top.second] + i.second)
-        {
-           
-            dp[i.first] = dp[top.second] + i.second;
-            s.insert({dp[i.first] , i.first});
-        }
-     }   
-  }
-}
 void solve(){
-  int n,m;cin>>n>>m;
-  dp[1] = 0;
-  for(int i=0;i<m;i++)
-  {
-    int a , b ,c;cin>>a>>b>>c; 
-    adj[a].push_back({b,c});
-    adj[a+n].push_back({b+n,c});
-  }
- for(int i=1;i<=n;i++){
-    adj[i].push_back({i+n,0});
- }
-  shortest_path(1);
- 
-  for(int i=2;i<=n;i++){
-    ll mn = min(dp[i] , dp[i+n]);  
-    if(mn==LLONG_MAX){
-        cout<<-1<<" ";
+ int start = 1 , end = 999;
+ while(end-start>2)
+ {
+    int a = (start*2 + end)/3;
+    int b = (end*2 + start)/3;
+    cout<<"? "<<a<<" "<<b<<endl;
+    cout.flush();
+    
+    int ele;cin>>ele;
+    if(((a+1)*(b+1))==ele){
+        end = a;
+    }else if(a*b==ele){
+        start = b;
     }else{
-        cout<<mn<<" ";
+        start = a, end = b;
     }
-  }cout<<endl;
+    
+ }
+ 
+  if (end - start == 2) {
+		cout << "? 1 " << start + 1 << endl;
+		int resp; cin >> resp;
+		
+		if (resp == start + 1) {start = start + 1;}
+		else {end = start + 1;}
+		
+	}
+	cout << "! " << start+1 << endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }
