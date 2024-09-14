@@ -37,54 +37,54 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
- int n , k;cin>>n>>k;
-    string a , b;cin>>a>>b;
-    if(a==b){
-        cout<<0<<endl;return;
-    }
-    b+='#';
-    // a -> b
-    // 2*n
-    // a[i]!=b[i] somewhere.
-    // before i a[i]==b[i] is true;
-    // If this is the last operation i->(i+k-1) , i am converting a[j] = b[i] , where j->[i , i+k-1]
-    // (0->(n-k-1)) equal by doing the opearation.
-    // then what should i do . 
-    // I will check that if after some index from (i->i+k-1), all elements are equal and starting from 
-    // (i+k , all elements are equal i.e. a[i]==b[i])
-    // if we are able to find some index i , which fulfil these conditions then it is possible. 
-    vector<int>suff(n+1 , 0);
-    
-    for(int i=n-1;i>=0;i--){
+   int n ,q;cin>>n>>q;
+   vector<int>arr(n);
+   for(int i=0;i<n;i++)cin>>arr[i];
+   while(q--)
+   {
+        int l , r , k;cin>>l>>r>>k;
+        int ans = 0;
+        int mean = 0;
+        for(int i=l-1;i<r;i++)mean+=arr[i];
+        double check = (double)mean/(r-l+1);
+        mean/=(r-l+1);
+        if(check-mean>=0.5000000000000000000){
+            mean++;
+        }
+       
+        for(int i=l-1;i<r;i++){
+            int j = i;
+            int ini = arr[i];
+            int final = arr[i];
+           
+            while(ini<mean){
+                if(ini==final){
+                    while(i<r && arr[i]==final){
+                        i++;
+                    }
+                    if(i<r)
+                    final = arr[i];
+                }
+                ini++;ans++;
+            }
+            
+            while(ini>mean){
+                if(ini==final){
+                    while(i<r && arr[i]==final){
+                        i++;
+                    }
+                    if(i<r)
+                    final = arr[i];
+                }
+                ini--;ans++;
+            }
+            if(final!=arr[j]){ i--;}
+            
+        }
         
-       if(b[i]==b[i+1]){
-           suff[i] = 1+suff[i+1];
-       }else{
-           suff[i]=1;
-       }
-    }
-    bool f = 0;
-    
-    vector<pair<int,char>>ans;
-    int ind = -1;
-    for(int i=0;i<=n-k;i++){
-        if(suff[i]==k){
-            f=1; ind = i;break;
-        }
-        ans.push_back({i,b[i]}); 
-    }
-    if(f==0){
-        cout<<-1<<endl;
-    }else{
-        for(int i=n-k,j=n-1;i>=ind;i--)
-        {
-            ans.push_back({i,b[j--]});
-        }
-        cout<<ans.size()<<endl;
-        for(int i=0;i<ans.size();i++){
-            cout<<ans[i].first+1<<" "<<ans[i].second<<endl;
-        }
-    }
+         ans = max(0 , ans - k );
+         cout<<ans<<endl;
+   }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

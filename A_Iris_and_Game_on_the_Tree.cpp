@@ -36,55 +36,57 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+vector<int>leaves;
+vector<int>weight;
+void dfs(int node , int parent , vector<int>adj[] , string &s , int value , int prev)
+{
+   int cnt = 0;
+   for(auto i:adj[node]){
+      if(i==parent)continue;
+      cnt++;
+      if(prev==1 && s[node-'1']=='0'){
+        value++;
+        dfs(i , node , adj , s , value, 0);
+      }else if(prev==0 && s[node-1]=='1'){
+        value--;
+        dfs(i , node , adj , s , value , 1);
+      }else{
+        int curr = (s[node-1]-'0');
+        if(prev!=-1)curr = prev;
+        dfs(i , node , adj , s , value , curr);
+      }
+   }
+   if(cnt==0){
+     leaves.push_back(node);
+     weight.push_back(value);
+   }
+   
+}
 void solve(){
- int n , k;cin>>n>>k;
-    string a , b;cin>>a>>b;
-    if(a==b){
-        cout<<0<<endl;return;
-    }
-    b+='#';
-    // a -> b
-    // 2*n
-    // a[i]!=b[i] somewhere.
-    // before i a[i]==b[i] is true;
-    // If this is the last operation i->(i+k-1) , i am converting a[j] = b[i] , where j->[i , i+k-1]
-    // (0->(n-k-1)) equal by doing the opearation.
-    // then what should i do . 
-    // I will check that if after some index from (i->i+k-1), all elements are equal and starting from 
-    // (i+k , all elements are equal i.e. a[i]==b[i])
-    // if we are able to find some index i , which fulfil these conditions then it is possible. 
-    vector<int>suff(n+1 , 0);
-    
-    for(int i=n-1;i>=0;i--){
-        
-       if(b[i]==b[i+1]){
-           suff[i] = 1+suff[i+1];
-       }else{
-           suff[i]=1;
-       }
-    }
-    bool f = 0;
-    
-    vector<pair<int,char>>ans;
-    int ind = -1;
-    for(int i=0;i<=n-k;i++){
-        if(suff[i]==k){
-            f=1; ind = i;break;
-        }
-        ans.push_back({i,b[i]}); 
-    }
-    if(f==0){
-        cout<<-1<<endl;
-    }else{
-        for(int i=n-k,j=n-1;i>=ind;i--)
-        {
-            ans.push_back({i,b[j--]});
-        }
-        cout<<ans.size()<<endl;
-        for(int i=0;i<ans.size();i++){
-            cout<<ans[i].first+1<<" "<<ans[i].second<<endl;
-        }
-    }
+  leaves.clear();
+  weight.clear();
+  int n;cin>>n;
+  vector<int>adj[n+1];
+  for(int i=1;i<n;i++){
+    int a , b;cin>>a>>b;
+    adj[a].push_back(b);
+    adj[b].push_back(a);
+  }
+  string s;cin>>s;
+  dfs(1 , -1 , adj , s , 0 , -1);
+  int ans = 0;
+  int cnt = 0;
+  for(int i=0;i<leaves.size();i++)
+  {
+     if(s[leaves[i]-1]=='?')
+     {
+        cnt++;
+     }
+     else{
+         
+     }
+  }
+  cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

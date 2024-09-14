@@ -36,55 +36,65 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-void solve(){
- int n , k;cin>>n>>k;
-    string a , b;cin>>a>>b;
-    if(a==b){
-        cout<<0<<endl;return;
+int find(int n )
+{
+    for(int i=31;i>=0;i--)
+    {
+        int now  = (n&(1<<i));
+        if(now>0){
+            return now;
+        }
     }
-    b+='#';
-    // a -> b
-    // 2*n
-    // a[i]!=b[i] somewhere.
-    // before i a[i]==b[i] is true;
-    // If this is the last operation i->(i+k-1) , i am converting a[j] = b[i] , where j->[i , i+k-1]
-    // (0->(n-k-1)) equal by doing the opearation.
-    // then what should i do . 
-    // I will check that if after some index from (i->i+k-1), all elements are equal and starting from 
-    // (i+k , all elements are equal i.e. a[i]==b[i])
-    // if we are able to find some index i , which fulfil these conditions then it is possible. 
-    vector<int>suff(n+1 , 0);
-    
-    for(int i=n-1;i>=0;i--){
+    return 0;
+}
+
+bool ans(vector<int>&arr)
+{
+    int n = arr.size();
+    ll sum = 0;
+    for(int i=0;i<n;i++){sum+=arr[i];}
+    if(sum%n){
+         
+        return 0;
+    }
+   
+    sum/=n;
+    vector<int>bit(37 , 0);
+    for(int i=0;i<n;i++){
+        if(arr[i]==sum){
+            continue;
+        }
+        ll val = abs(sum - arr[i]);
+        ll now = (val&(-val));
         
-       if(b[i]==b[i+1]){
-           suff[i] = 1+suff[i+1];
-       }else{
-           suff[i]=1;
-       }
-    }
-    bool f = 0;
-    
-    vector<pair<int,char>>ans;
-    int ind = -1;
-    for(int i=0;i<=n-k;i++){
-        if(suff[i]==k){
-            f=1; ind = i;break;
-        }
-        ans.push_back({i,b[i]}); 
-    }
-    if(f==0){
-        cout<<-1<<endl;
-    }else{
-        for(int i=n-k,j=n-1;i>=ind;i--)
+        ll curr = val + now;
+         
+        if(__builtin_popcount(curr)==1)
         {
-            ans.push_back({i,b[j--]});
-        }
-        cout<<ans.size()<<endl;
-        for(int i=0;i<ans.size();i++){
-            cout<<ans[i].first+1<<" "<<ans[i].second<<endl;
+            if(arr[i]>sum){
+                bit[__lg(curr)]++;
+                bit[__lg(now)]--;
+            }else{
+                bit[__lg(curr)]--;
+                bit[__lg(now)]++;
+            }
+        }else{
+            return 0;
         }
     }
+    for(int i=0;i<=36;i++){
+        if(bit[i]){
+            return 0;
+        }
+    }
+    return 1;
+}
+void solve(){
+   int n;cin>>n;
+   vector<int>arr(n);
+   for(int i=0;i<n;i++)cin>>arr[i];
+   bool check = ans(arr);
+   cout<<(check?"Yes":"No")<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
