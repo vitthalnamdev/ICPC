@@ -36,21 +36,41 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-
-bool cmp(pair<int,int>a , pair<int,int>b){
-  return a.second < b.second;
+ll l;
+ 
+bool cmp(pair<ll,ll>a , pair<ll,ll>b){
+  return a.second<b.second;
 }
+
+ 
 void yeh_bhi_krr_lete_hain(){
-   int n;cin>>n;
-   int l;cin>>l;
-   vector<pair<int,int>>arr(n);
-   for(int i = 0;i<n;i++)
-   {
-      int ans = 0;
-      for(int j= i+1;j<n;j++){
-        
+  ll n;cin>>n;
+  cin>>l;
+  vector<pair<ll,ll>>arr(n);
+  for(int i=0;i<n;i++){
+   cin>>arr[i].first>>arr[i].second;
+  }
+  sort(arr.begin() , arr.end() , cmp);
+   
+  int ans = 0;
+  for(int i=0;i<n;i++){
+    multiset<ll,greater<ll>>s;
+    ll sum = 0;
+    for(int j=i;j<n;j++){
+      s.insert(arr[j].first);
+      sum+=arr[j].first;
+       
+      ll curr = arr[j].second - arr[i].second + sum;
+      while(!s.empty() && curr>l){
+        curr-=(*s.begin());
+        sum-=(*s.begin());
+        s.erase(s.begin());
       }
-   }
+      int sz = s.size();
+      ans = max(ans , sz);
+    }
+  }
+  cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
