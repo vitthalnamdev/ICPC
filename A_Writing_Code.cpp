@@ -36,36 +36,38 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-
-  ll inf = INT_MAX;
-    void reroot(int v, int p, ll d_up , vector<ll>&d , vector<ll>&d_all , vector<int>adj[]) {
-        d_all[v] = max(d[v], d_up);
-        vector<int> sons;
-        int max1 = -inf, max2 = -inf;
-        for (int to: adj[v]) {
-            if (to == p) {
-                continue;
-            }
-            sons.push_back(to);
-            if (max1 < d[to]) {
-                max2 = max1;
-                max1 = d[to];
-            } else if (max2 < d[to]) {
-                max2 = d[to];
-            }
-        }
-        for (int to: sons) {
-            reroot(to, v, max(d_up + 1,(ll)(d[to] == max1 ? max2 : max1) + 2) , d , d_all , adj);
-        }
-    }
-
+vector<vector<ll>>dp(501 , vector<ll>(501 , 0));
 void solve(){
-    
+ ll n , m , b , mod;
+ cin>>n>>m>>b>>mod;
+ vector<ll>arr(n+1);
+ for(int i=1;i<=n;i++)cin>>arr[i];
+//  dp[0][1][0] = 1;
+ for(int i=1;i<=n;i++){
+    dp[i][0] = 1;
+ }
+ for(int i=1;i<=m;i++){
+    vector<vector<ll>>temp = dp;
+    for(int j=1;j<=n;j++){
+      for(int k=0;k<=b;k++){
+            temp[j][k] = (j-1>=0?temp[j-1][k]:0) + (k-arr[j]>=0?dp[j][k-arr[j]]:0);
+            temp[j][k]%=mod;
+      }
+    }
+    dp = temp;
+  }
   
+ 
+   ll ans = 0;
+    for(int j=0;j<=b;j++){
+        ans+=(dp[n][j]);
+        ans%=mod;
+    }
+   cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 solve();
 }

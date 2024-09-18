@@ -1,0 +1,1 @@
+{"name":"Local: tree_center","url":"c:\\Users\\Vitthal Namdev\\Documents\\icpc\\graphs\\tree_center.cpp","tests":[{"id":1726467144219,"input":"6\n1 2\n3 2 \n4 2\n4 5\n4 6","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Vitthal Namdev\\Documents\\icpc\\graphs\\tree_center.cpp","group":"local","local":true}

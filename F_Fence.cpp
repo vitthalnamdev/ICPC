@@ -36,36 +36,66 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-
-  ll inf = INT_MAX;
-    void reroot(int v, int p, ll d_up , vector<ll>&d , vector<ll>&d_all , vector<int>adj[]) {
-        d_all[v] = max(d[v], d_up);
-        vector<int> sons;
-        int max1 = -inf, max2 = -inf;
-        for (int to: adj[v]) {
-            if (to == p) {
-                continue;
-            }
-            sons.push_back(to);
-            if (max1 < d[to]) {
-                max2 = max1;
-                max1 = d[to];
-            } else if (max2 < d[to]) {
-                max2 = d[to];
-            }
-        }
-        for (int to: sons) {
-            reroot(to, v, max(d_up + 1,(ll)(d[to] == max1 ? max2 : max1) + 2) , d , d_all , adj);
+ void setIO(string s1 , string s2) {
+	freopen((s1 + ".txt").c_str(), "r", stdin);
+	freopen((s2 + ".txt").c_str(), "w", stdout);
+}
+const int N = 201;
+int dp[N][N*N+10][3];
+void solve(){
+    int n;cin>>n;
+    vector<int>arr(n);
+    int a , b;cin>>a>>b;
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
+    for(int i=0;i<N;i++){
+        for(int j=0;j<=N*N;j++){
+            for(int k=0;k<=2;k++)dp[i][j][k] = 1e9;
         }
     }
-
-void solve(){
-    
-  
+    int sum = arr[0];
+    int cnt = 0;
+    dp[0][arr[0]][1] = (a>=arr[0]?0:1e9);
+    dp[0][0][0] = (b>=arr[0]?0:1e9);
+    for(int i=1;i<n;i++){
+       for(int j=0;j<=a;j++){
+           for(int k=0;k<=1;k++){
+              if(j+arr[i]<=a && dp[i-1][j][k]!=1e9){
+                dp[i][j+arr[i]][1] = min(dp[i][j+arr[i]][1] , dp[i-1][j][k] + (k==0?min(arr[i] , arr[i-1]):0)); 
+              }
+              if(sum-j+arr[i]<=b && dp[i-1][j][k]!=1e9){
+                dp[i][j][0] = min(dp[i][j][0] , dp[i-1][j][k] + (k==1?min(arr[i] , arr[i-1]):0));
+              }
+                
+           }
+       } 
+       sum+=arr[i];  
+       if(sum<=a){
+         dp[i][sum][1] = 0;
+       }
+       if(sum<=b){
+         dp[i][0][0] = 0;
+       }
+       
+    }
+    int ans = 1e9;
+ 
+    for(int i=0;i<=a;i++){
+       
+       ans = min(ans , dp[n-1][i][0]);
+       ans = min(ans , dp[n-1][i][1]);
+    }
+    if(ans>=1e9){
+        cout<<-1<<endl;
+    }else{
+        cout<<ans<<endl;
+    }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+setIO("input" , "output");
+int t=1;
 while(t--){
 solve();
 }
