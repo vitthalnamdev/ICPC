@@ -36,54 +36,37 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-bool check(ll mid, ll avg, vector<ll>&arr) {
-   double n = arr.size();
-    double check  = (long double)(avg + mid) / (n);
-     check/= 2.0;
-
-    ll up  = upper_bound(arr.begin(), arr.end(), check) - arr.begin();
-     if(up==n)up--;
-     while(up>0&&arr[up]>=check)up--;
-     up++;
-    int value = n / 2;
-    return up > value;
-}
-
 void solve(){
-   int n;cin>>n;
-   vector<ll>arr(n);
-   for(int i=0;i<n;i++)cin>>arr[i];
-  ll avg = 0;
- if(n<=2){
-    cout<<-1<<endl;return;
+ int n , d , k;cin>>n>>d>>k;
+ vector<pair<int,int>>arr(k);
+ for(int i=0;i<k;i++){
+    cin>>arr[i].first;
+    cin>>arr[i].second;
  }
-  for(int i=0;i<n;i++)avg+=arr[i];
-
-  sort(arr.begin() , arr.end());
-  ll start = 0 , end = 1e12;
-  ll mid ;
-  while(end  - start > 1)
-  {
-    mid = (start + end ) /2;
-    if(check(mid , avg , arr)){
-      end = mid ;
-    }else{
-      start = mid+1;
+  
+ vector<int>jobstart(n+2 , 0),jobend(n+2 , 0);
+ for(int i=0;i<k;i++){
+    jobstart[arr[i].first]++;
+    jobend[arr[i].second]++;
+ }
+ for(int i=1;i<=n;i++){
+    jobstart[i]+=jobstart[i-1];
+    jobend[i]+=jobend[i-1];
+ }
+  int mx = 0 , mn = k+1;
+  int mxind , mnind;
+  for(int i=d;i<=n;i++){
+    int sum = jobstart[i] - jobend[i-d];
+    if(mx<sum){
+       mx = sum;
+       mxind = i-d+1;
+    }
+    if(mn>sum){
+       mn = sum;
+       mnind = i-d+1;
     }
   }
-
-  if(check(start , avg , arr)){
-   
-   cout<<start<<endl;
-  }else if(check(end , avg , arr)){
-    cout<<end<<endl;
-  }else{
-    cout<<-1<<endl;
-  }
-
-   
-    
-    
+ cout<<mxind<<" "<<mnind<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

@@ -36,54 +36,23 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-bool check(ll mid, ll avg, vector<ll>&arr) {
-   double n = arr.size();
-    double check  = (long double)(avg + mid) / (n);
-     check/= 2.0;
-
-    ll up  = upper_bound(arr.begin(), arr.end(), check) - arr.begin();
-     if(up==n)up--;
-     while(up>0&&arr[up]>=check)up--;
-     up++;
-    int value = n / 2;
-    return up > value;
-}
-
 void solve(){
-   int n;cin>>n;
-   vector<ll>arr(n);
-   for(int i=0;i<n;i++)cin>>arr[i];
-  ll avg = 0;
- if(n<=2){
-    cout<<-1<<endl;return;
- }
-  for(int i=0;i<n;i++)avg+=arr[i];
-
-  sort(arr.begin() , arr.end());
-  ll start = 0 , end = 1e12;
-  ll mid ;
-  while(end  - start > 1)
-  {
-    mid = (start + end ) /2;
-    if(check(mid , avg , arr)){
-      end = mid ;
-    }else{
-      start = mid+1;
+ ll n;cin>>n;
+ vector<ll>arr(n);
+ for(int i=0;i<n;i++)cin>>arr[i];
+ if(n==2){
+    cout<<arr[1] - arr[0]<<endl;
+ }else{
+    ll check = 0;
+    for(int i=0;i<n-2;i++)
+    {
+       check+=arr[i];
     }
-  }
+    arr[n-2]-=(check);
+    arr[n-1]-=(arr[n-2]);
+    cout<<arr[n-1]<<endl;
+ }
 
-  if(check(start , avg , arr)){
-   
-   cout<<start<<endl;
-  }else if(check(end , avg , arr)){
-    cout<<end<<endl;
-  }else{
-    cout<<-1<<endl;
-  }
-
-   
-    
-    
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

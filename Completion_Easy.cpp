@@ -36,54 +36,34 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-bool check(ll mid, ll avg, vector<ll>&arr) {
-   double n = arr.size();
-    double check  = (long double)(avg + mid) / (n);
-     check/= 2.0;
-
-    ll up  = upper_bound(arr.begin(), arr.end(), check) - arr.begin();
-     if(up==n)up--;
-     while(up>0&&arr[up]>=check)up--;
-     up++;
-    int value = n / 2;
-    return up > value;
-}
-
 void solve(){
-   int n;cin>>n;
-   vector<ll>arr(n);
-   for(int i=0;i<n;i++)cin>>arr[i];
-  ll avg = 0;
- if(n<=2){
-    cout<<-1<<endl;return;
+ ll n;cin>>n;
+ vector<ll>arr(2*n);
+ for(int i=0;i<2*n;i++)cin>>arr[i];
+ int mod = 998244353;
+ unsigned long long  ans = 1;
+ ll aboven = 0;
+ ll prevn = 0;
+ for(int i=0;i<2*n;i+=2){
+   if(arr[i]>n)aboven++;
+   else if(arr[i]>0)prevn++;
  }
-  for(int i=0;i<n;i++)avg+=arr[i];
-
-  sort(arr.begin() , arr.end());
-  ll start = 0 , end = 1e12;
-  ll mid ;
-  while(end  - start > 1)
-  {
-    mid = (start + end ) /2;
-    if(check(mid , avg , arr)){
-      end = mid ;
-    }else{
-      start = mid+1;
-    }
-  }
-
-  if(check(start , avg , arr)){
-   
-   cout<<start<<endl;
-  }else if(check(end , avg , arr)){
-    cout<<end<<endl;
-  }else{
-    cout<<-1<<endl;
-  }
-
-   
-    
-    
+ aboven = n-aboven;
+ prevn = n-prevn;
+ for(int i=0;i<2*n;i+=2){
+   if(arr[i]<=n && arr[i]>0){
+     ans*=(aboven);aboven--;
+     ans%=mod;
+   }else if(arr[i]>n){
+     ans*=(prevn);prevn--;
+     ans%=mod;
+   }else{
+      ans*=(((aboven*prevn)%mod)*2LL);
+      ans%=mod;
+      aboven--;prevn--;
+   }
+ }
+ cout<<(ans+mod)%mod<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
