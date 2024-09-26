@@ -36,56 +36,54 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+
+vector<int>ans;
+
+int dfs(int node , vector<pair<int,int>>adj[] , int parent , vector<int>&dp , int ind)
+{
+   
+   for(auto i:adj[node]){
+      if(i.first==parent){
+         continue;
+      }
+      dp[node]+=dfs(i.first , adj , node , dp , i.second);
+   }
+   if(dp[node]==3){
+      if(ind!=-1){
+         ans.push_back(ind);
+      }
+      return 0;
+   }
+   return dp[node];
+}
+ 
 void solve(){
- int n,m,k;cin>>n>>m>>k;
- vector<ll>arr(n);
- for(int i=0;i<n;i++){
-    cin>>arr[i];
- }
- int mask = (1<<n);
- vector<vector<ll>>dp(mask , vector<ll>(n+1 , 0));
- vector<vector<ll>>rules(n+1 , vector<ll>(n+1 , 0));
- for(int i=0;i<k;i++){
-     int x,y,z;cin>>x>>y>>z;
-     rules[x-1][y-1] = z;
- }
- for(int i=0;i<n;i++){
-    int curr = (1<<i);
-    dp[curr][i] = arr[i];
- }
- for(int i=0;i<mask;i++)
- {
-    for(int j=0;j<n;j++){
-        int now = ((1<<j)&i);
-        if(now){
-            for(int k=0;k<n;k++){
-                if(((1<<k)&i)==0){
-                 
-                  dp[i|(1<<k)][k] = max(dp[i|(1<<k)][k] , dp[i][j] + rules[j][k] + arr[k]);
-                }
-            }
-        }
-    }
- }
-  
- ll ans = 0;
- for(int i=0;i<mask;i++){
-    int cnt = 0;
-    for(int j=0;j<n;j++){
-        int now = ((1<<j)&i);
-        cnt+=(now>0);
-    }
-    if(cnt==m){
-        for(int j=0;j<n;j++){
-          ans = max(ans , dp[i][j]);
-        }
-    }
- }
- cout<<ans<<'\n';
+ 
+  ans.clear();
+  int n;cin>>n;
+  vector<pair<int,int>>adj[n+1]; 
+  for(int i=1;i<n;i++){
+     int a , b;cin>>a>>b;
+     adj[a].push_back({b,i});
+     adj[b].push_back({a,i});
+  }
+  if(n%3){
+     cout<<-1<<endl;return;
+  }
+  vector<int>dp(n+1 , 1);
+  int check =  dfs(1 , adj , -1 , dp , -1);
+   
+  if(check!=0){
+     cout<<-1<<endl;return;
+  }
+  cout<<ans.size()<<endl;
+  for(auto i:ans){
+     cout<<i<<" ";
+  }cout<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

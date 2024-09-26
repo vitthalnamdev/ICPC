@@ -37,55 +37,26 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
- int n,m,k;cin>>n>>m>>k;
- vector<ll>arr(n);
- for(int i=0;i<n;i++){
-    cin>>arr[i];
+ int n;cin>>n;
+ vector<int>adj[n+1];
+ for(int i=1;i<n;i++){
+    int a , b;cin>>a>>b;
+    adj[a].push_back(b);
+    adj[b].push_back(a);
  }
- int mask = (1<<n);
- vector<vector<ll>>dp(mask , vector<ll>(n+1 , 0));
- vector<vector<ll>>rules(n+1 , vector<ll>(n+1 , 0));
- for(int i=0;i<k;i++){
-     int x,y,z;cin>>x>>y>>z;
-     rules[x-1][y-1] = z;
- }
- for(int i=0;i<n;i++){
-    int curr = (1<<i);
-    dp[curr][i] = arr[i];
- }
- for(int i=0;i<mask;i++)
- {
-    for(int j=0;j<n;j++){
-        int now = ((1<<j)&i);
-        if(now){
-            for(int k=0;k<n;k++){
-                if(((1<<k)&i)==0){
-                 
-                  dp[i|(1<<k)][k] = max(dp[i|(1<<k)][k] , dp[i][j] + rules[j][k] + arr[k]);
-                }
-            }
-        }
-    }
- }
-  
  ll ans = 0;
- for(int i=0;i<mask;i++){
-    int cnt = 0;
-    for(int j=0;j<n;j++){
-        int now = ((1<<j)&i);
-        cnt+=(now>0);
-    }
-    if(cnt==m){
-        for(int j=0;j<n;j++){
-          ans = max(ans , dp[i][j]);
-        }
+ for(int i=1;i<=n;i++){
+    if(adj[i].size()==1){
+        ans+=3;
+    }else{
+        ans+=2;
     }
  }
- cout<<ans<<'\n';
+ cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

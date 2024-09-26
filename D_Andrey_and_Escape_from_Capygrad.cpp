@@ -36,56 +36,60 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+ 
 void solve(){
- int n,m,k;cin>>n>>m>>k;
- vector<ll>arr(n);
- for(int i=0;i<n;i++){
-    cin>>arr[i];
- }
- int mask = (1<<n);
- vector<vector<ll>>dp(mask , vector<ll>(n+1 , 0));
- vector<vector<ll>>rules(n+1 , vector<ll>(n+1 , 0));
- for(int i=0;i<k;i++){
-     int x,y,z;cin>>x>>y>>z;
-     rules[x-1][y-1] = z;
- }
- for(int i=0;i<n;i++){
-    int curr = (1<<i);
-    dp[curr][i] = arr[i];
- }
- for(int i=0;i<mask;i++)
- {
-    for(int j=0;j<n;j++){
-        int now = ((1<<j)&i);
-        if(now){
-            for(int k=0;k<n;k++){
-                if(((1<<k)&i)==0){
-                 
-                  dp[i|(1<<k)][k] = max(dp[i|(1<<k)][k] , dp[i][j] + rules[j][k] + arr[k]);
-                }
-            }
-        }
-    }
- }
+  int n;cin>>n;
+   vector<vector<int>>points(n , vector<int>(5 , 0));
+  for(int i=0;i<n;i++){
+     cin>>points[i][0]>>points[i][1]>>points[i][2]>>points[i][3];
+     points[i][4] = i;
+  }
+
+    
+  sort(points.begin() , points.end() , [](const vector<int>&a , const vector<int>&b){
+    return a[3]<b[3];
+  });
   
- ll ans = 0;
- for(int i=0;i<mask;i++){
-    int cnt = 0;
-    for(int j=0;j<n;j++){
-        int now = ((1<<j)&i);
-        cnt+=(now>0);
+
+  vector<int>ans(n);
+  int mn = INT_MAX;int mnind = n-1;
+  for(int i=n-1;i>=0;i--)
+  {
+    if(i==n-1){
+        ans[points[i][4]] = points[i][3];
+    }else if(points[i][3]<mn){
+        ans[points[i][4]] = points[i][3];
+    }else{
+        ans[points[i][4]] = ans[points[mnind][4]];
     }
-    if(cnt==m){
-        for(int j=0;j<n;j++){
-          ans = max(ans , dp[i][j]);
-        }
+    if(points[i][0]<mn){
+        mn = points[i][0];
+        mnind = i;
     }
- }
- cout<<ans<<'\n';
+  }
+  
+  sort(points.begin() , points.end() , [](const vector<int>&a , const vector<int>&b){
+    return a[0]<b[0];
+  });
+  int q;cin>>q;
+  
+  while(q--)
+  {
+     int x;cin>>x;
+      auto ind = upper_bound(points.begin(), points.end(), x, [](int value, const vector<int>& point) {
+        return value < point[0];
+    })- points.begin();
+       
+     if(ind==0){
+        cout<<x<<" ";
+     }else{
+        cout<<max(x , ans[points[ind-1][4]])<<" ";
+     }
+  }cout<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

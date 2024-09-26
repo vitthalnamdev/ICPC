@@ -46,7 +46,7 @@ void yeh_bhi_krr_lete_hain(){
      for(int j=1;j<=i;j++){
        if(((i-j))>=(arr[i-1] + dp[i-1][j-1]))
         dp[i][j] = min(dp[i-1][j] , dp[i-1][j-1] + arr[i-1]);
-       else
+       else 
         dp[i][j] = dp[i-1][j];
      }
    }

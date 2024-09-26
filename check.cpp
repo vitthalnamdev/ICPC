@@ -36,58 +36,53 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-bool check(ll mid, ll avg, vector<ll>&arr) {
-   double n = arr.size();
-    double check  = (long double)(avg + mid) / (n);
-     check/= 2.0;
 
-    ll up  = upper_bound(arr.begin(), arr.end(), check) - arr.begin();
-     if(up==n)up--;
-     while(up>0&&arr[up]>=check)up--;
-     up++;
-    int value = n / 2;
-    return up > value;
-}
+class Table
+{
+public:
+    void build(vector<ll> &arr, int n, vector<vector<ll>> &table)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            table[i][0] = arr[i];
+        }
+        for (int j = 1; j < 20; j++)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                int now = (i + (1 << (j - 1)));
+                if (now >= n)
+                {
+                    break;
+                }
+                table[i][j] = max(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);
+            }
+        }
+    }
+    int query(int l, int r, vector<vector<ll>> &table)
+    {
+        int sz = (r - l + 1);
+        int cnt = 0;
+        for (int i = 0; i < 20; i++)
+        {
+            int now = (1 << i);
+            if (now > sz)
+            {
+                cnt = i - 1;
+                break;
+            }
+        }
+        return max(table[l][cnt], table[r - (1 << cnt) + 1][cnt]);
+    }
+};
+
 
 void solve(){
-   int n;cin>>n;
-   vector<ll>arr(n);
-   for(int i=0;i<n;i++)cin>>arr[i];
-  ll avg = 0;
- if(n<=2){
-    cout<<-1<<endl;return;
- }
-  for(int i=0;i<n;i++)avg+=arr[i];
-
-  sort(arr.begin() , arr.end());
-  ll start = 0 , end = 1e12;
-  ll mid ;
-  while(end  - start > 1)
-  {
-    mid = (start + end ) /2;
-    if(check(mid , avg , arr)){
-      end = mid ;
-    }else{
-      start = mid+1;
-    }
-  }
-
-  if(check(start , avg , arr)){
    
-   cout<<start<<endl;
-  }else if(check(end , avg , arr)){
-    cout<<end<<endl;
-  }else{
-    cout<<-1<<endl;
-  }
-
-   
-    
-    
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 solve();
 }
