@@ -36,49 +36,40 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+
+ 
+ 
 void solve(){
-  int n;cin>>n;
-  vector<int>arr(n);
-  for(int i=0;i<n;i++)cin>>arr[i];
-  vector<int>freq(n+1 , 0);
-  for(int i=0;i<n;i++){
-    freq[arr[i]]++;
+  
+  int n , k;cin>>n>>k;
+  int mod = 1e9+7;
+  vector<vector<ll>>dp(k+1 , vector<ll>(n+1 , 0));
+  for(int i=1;i<=n;i++){
+     dp[1][i]=1;
   }
  
-  arr.clear();
+  for (int i = 1; i <= k-1; i++)
+  { 
+    for(int j=1;j<=n;j++){
+        for(int k=j;k<=n;k+=j){
+            dp[i+1][k]+=dp[i][j];
+            dp[i+1][k]%=mod;
+        }
+    }   
+  }ll ans = 0;
+  
   for(int i=1;i<=n;i++){
-     if(freq[i]>0){
-       arr.push_back(freq[i]);
-     }
-  }
-  n = arr.size();
-  vector<vector<int>>dp(n+1 , vector<int>(n+1 , 1e9));
-  for(int i=1;i<=n;i++){
-    dp[i][0] = 0;
-  }
-  for(int i=1;i<=n;i++){
-    for(int j=1;j<i;j++){
-       
-       if((i-j)>=(arr[i-1] + dp[i-1][j-1]))
-        dp[i][j] = min(dp[i-1][j] , dp[i-1][j-1] + arr[i-1]);
-       else
-        dp[i][j] = dp[i-1][j];
-    }
-  }
- 
-  int ans = 0;
- 
-  for(int i=1;i<=n;i++){
-    if(dp[n][i]==1e9){
      
-       ans++;
-    }
+     ans+=(dp[k][i]);
+     ans%=mod;
   }
-  cout<<ans<<endl;
+  cout<<ans%mod<<'\n';
 }
+
+
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 solve();
 }

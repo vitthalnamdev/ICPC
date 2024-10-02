@@ -37,48 +37,41 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
-  int n;cin>>n;
-  vector<int>arr(n);
-  for(int i=0;i<n;i++)cin>>arr[i];
-  vector<int>freq(n+1 , 0);
-  for(int i=0;i<n;i++){
-    freq[arr[i]]++;
-  }
- 
-  arr.clear();
-  for(int i=1;i<=n;i++){
-     if(freq[i]>0){
-       arr.push_back(freq[i]);
-     }
-  }
-  n = arr.size();
-  vector<vector<int>>dp(n+1 , vector<int>(n+1 , 1e9));
-  for(int i=1;i<=n;i++){
-    dp[i][0] = 0;
-  }
-  for(int i=1;i<=n;i++){
-    for(int j=1;j<i;j++){
-       
-       if((i-j)>=(arr[i-1] + dp[i-1][j-1]))
-        dp[i][j] = min(dp[i-1][j] , dp[i-1][j-1] + arr[i-1]);
-       else
-        dp[i][j] = dp[i-1][j];
-    }
-  }
- 
-  int ans = 0;
- 
-  for(int i=1;i<=n;i++){
-    if(dp[n][i]==1e9){
-     
-       ans++;
-    }
-  }
-  cout<<ans<<endl;
+   int n;cin>>n;
+   vector<vector<ll>>arr;
+   for(int i=0;i<n;i++){
+      int x , y , z;cin>>x>>y>>z;
+      arr.push_back({x , y , z});
+   }
+   
+   sort(arr.begin() , arr.end() , [&](vector<ll>a , vector<ll>b){
+     return a[1]<b[1];
+   });
+   
+   
+   vector<ll>dp(n);
+   for(int i=0;i<n;i++){    
+       int start = upper_bound(arr.begin() , arr.end() , arr[i][0] , [](ll val , vector<ll>a){
+         return val<=a[1];
+       }) - arr.begin();
+       if(start==0){
+         dp[i]+=arr[i][2];
+       }else{
+         dp[i]+=(dp[start-1] + arr[i][2]);
+       }
+       dp[i] = max(dp[i] , (i-1>=0?dp[i-1]:0));
+   }
+   ll ans = 0;
+   for(int i=0;i<n;i++){
+   
+    ans = max(ans , dp[i]);
+   }  
+   cout<<ans<<'\n';
+
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 solve();
 }

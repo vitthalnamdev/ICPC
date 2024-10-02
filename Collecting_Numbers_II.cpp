@@ -36,49 +36,63 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+int cal(int ind , vector<pair<int,int>>&arr)
+{
+   int ans = 0;
+   ans+=(arr[ind].second<arr[ind-1].second);
+   ans+=(arr[ind+1].second<arr[ind].second);
+   return ans;
+}
 void solve(){
-  int n;cin>>n;
-  vector<int>arr(n);
-  for(int i=0;i<n;i++)cin>>arr[i];
-  vector<int>freq(n+1 , 0);
-  for(int i=0;i<n;i++){
-    freq[arr[i]]++;
-  }
+ int n , q;cin>>n>>q;
+ vector<pair<int,int>>arr(n+2);
+ for(int i=1;i<=n;i++){
+    cin>>arr[i].first;
+    arr[i].second = i;
+ }
+ arr[0].first = -1;arr[n+1].first = INT_MAX;
+ sort(arr.begin()+1 , arr.end());
  
-  arr.clear();
-  for(int i=1;i<=n;i++){
-     if(freq[i]>0){
-       arr.push_back(freq[i]);
-     }
-  }
-  n = arr.size();
-  vector<vector<int>>dp(n+1 , vector<int>(n+1 , 1e9));
-  for(int i=1;i<=n;i++){
-    dp[i][0] = 0;
-  }
-  for(int i=1;i<=n;i++){
-    for(int j=1;j<i;j++){
-       
-       if((i-j)>=(arr[i-1] + dp[i-1][j-1]))
-        dp[i][j] = min(dp[i-1][j] , dp[i-1][j-1] + arr[i-1]);
-       else
-        dp[i][j] = dp[i-1][j];
-    }
-  }
+ vector<int>mapping(n+2);
+ for(int i=1;i<=n;i++){
+    mapping[arr[i].second] = i;
+ }
+ arr[0].second = -1;arr[n+1].second = INT_MAX;
+ int ans = 1;
+  
+  
+ for(int i=2;i<=n;i++){
+    if(arr[i].second<arr[i-1].second){ans++;}
+ }
  
-  int ans = 0;
- 
-  for(int i=1;i<=n;i++){
-    if(dp[n][i]==1e9){
+ while(q--)
+ {
+    int l , r;cin>>l>>r;
+    l = mapping[l];r = mapping[r];
+   
      
+    if(l>r)swap(l,r);
+    ans-=(cal(l , arr));
+    ans-=(cal(r , arr));
+    if(r==l+1 && arr[l].second>arr[r].second){
        ans++;
     }
-  }
-  cout<<ans<<endl;
+    swap(arr[l].second , arr[r].second);
+    mapping[arr[l].second] = l;
+    mapping[arr[r].second] = r;
+    ans+=(cal(l , arr));
+    ans+=(cal(r , arr));
+    if(r==l+1 && arr[l].second>arr[r].second){
+       ans--;
+    }
+    mapping[arr[l].second] = l;
+
+    cout<<ans<<endl;
+ }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 solve();
 }

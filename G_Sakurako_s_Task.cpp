@@ -40,31 +40,33 @@ void solve(){
  ll n,k;cin>>n>>k;
  vector<ll>arr(n);
  for(int i=0;i<n;i++)cin>>arr[i];
- ll ele = 0;
+ if(n==1){
+   if(k<=arr[0]){
+      cout<<k-1<<endl;
+   }else{
+      cout<<k<<endl;
+   }
+   return;  
+ }
+ ll gcd = 0;
  for(int i=0;i<n;i++){
-    ele = __gcd(arr[i],ele);
+   gcd = __gcd(arr[i], gcd);
  }
- 
- if(ele==1){
-    cout<<n+k-1<<endl;
-    return;
+ ll prev = 0;
+ for(int i=0;i<n;i++){
+    arr[i] = prev;
+    prev+=gcd;
  }
-  ll ans =0;
+  
+ for(int i=0;i<n;i++){
+   if(i+1<n && arr[i+1] - arr[i] > k){
+      cout<<arr[i]+k<<endl;return;
+   }
+   if(i+1<n)
+   k-=(arr[i+1] - arr[i]-1);
+ }
    
-  ll value = 0;
-  for(int i=0;i<n;i++){
-    arr[i] = value;
-    value+=ele; 
-  }
-  int i = 0;
-  for(i=0;i<n;i++){
-     if(k<=0){break;}
-     ans+=min(k,ele);
-     k-=(ele);  
-  }
-  cout<<ele<<endl;
-  cout<<ans+max((ll)0,k)-1<<endl;
-   
+ cout<<arr[n-1] + k<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

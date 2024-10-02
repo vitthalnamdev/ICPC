@@ -36,45 +36,57 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+bool recursion(int i , int ele , vector<int>&arr , int ind , int sum)
+{
+   int n = arr.size();
+   if(sum==ele){
+     return true;
+   }
+   if(i>=n){
+    return false;
+   }
+   if(i==ind){
+     bool check = recursion(i+1 , ele , arr , ind , sum);
+     return check;
+   }
+   bool check = recursion(i+1 , ele , arr , ind , sum);    
+   if(check==true){return true;}
+   check = recursion(i+1 , ele , arr , ind , sum + arr[i]);
+   if(check==true){
+    return true;
+   }
+   check = recursion(i+1 , ele , arr , ind , sum - (arr[i]));
+   return check;
+}
+bool check(vector<int>&arr)
+{
+   int n = arr.size();
+   for(int i=0;i<n;i++){
+     if(recursion(0 , arr[i] , arr , i , 0)){
+        return true;
+     }
+   }
+   return false;
+}
 void solve(){
   int n;cin>>n;
   vector<int>arr(n);
   for(int i=0;i<n;i++)cin>>arr[i];
-  vector<int>freq(n+1 , 0);
-  for(int i=0;i<n;i++){
-    freq[arr[i]]++;
+  if(n==1){
+      if(arr[0]==0){
+        cout<<"YES"<<endl;
+        return;
+      }else{
+        cout<<"NO"<<endl;return;
+      }
   }
- 
-  arr.clear();
-  for(int i=1;i<=n;i++){
-     if(freq[i]>0){
-       arr.push_back(freq[i]);
-     }
+//   sort(arr.begin() ,arr.end());
+  bool ans = check(arr);
+  if(ans){
+    cout<<"YES"<<endl;
+  }else{
+    cout<<"NO"<<endl;
   }
-  n = arr.size();
-  vector<vector<int>>dp(n+1 , vector<int>(n+1 , 1e9));
-  for(int i=1;i<=n;i++){
-    dp[i][0] = 0;
-  }
-  for(int i=1;i<=n;i++){
-    for(int j=1;j<i;j++){
-       
-       if((i-j)>=(arr[i-1] + dp[i-1][j-1]))
-        dp[i][j] = min(dp[i-1][j] , dp[i-1][j-1] + arr[i-1]);
-       else
-        dp[i][j] = dp[i-1][j];
-    }
-  }
- 
-  int ans = 0;
- 
-  for(int i=1;i<=n;i++){
-    if(dp[n][i]==1e9){
-     
-       ans++;
-    }
-  }
-  cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

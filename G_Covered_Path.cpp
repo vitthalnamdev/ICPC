@@ -37,48 +37,24 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
-  int n;cin>>n;
-  vector<int>arr(n);
-  for(int i=0;i<n;i++)cin>>arr[i];
-  vector<int>freq(n+1 , 0);
-  for(int i=0;i<n;i++){
-    freq[arr[i]]++;
-  }
- 
-  arr.clear();
-  for(int i=1;i<=n;i++){
-     if(freq[i]>0){
-       arr.push_back(freq[i]);
-     }
-  }
-  n = arr.size();
-  vector<vector<int>>dp(n+1 , vector<int>(n+1 , 1e9));
-  for(int i=1;i<=n;i++){
-    dp[i][0] = 0;
-  }
-  for(int i=1;i<=n;i++){
-    for(int j=1;j<i;j++){
-       
-       if((i-j)>=(arr[i-1] + dp[i-1][j-1]))
-        dp[i][j] = min(dp[i-1][j] , dp[i-1][j-1] + arr[i-1]);
-       else
-        dp[i][j] = dp[i-1][j];
+  int ini , final;cin>>ini>>final;
+  int t,d;cin>>t>>d;
+  vector<vector<int>>dp(t+1 , vector<int>(1110,INT_MIN));
+  dp[1][ini]=ini;
+  for(int i=1;i<t;i++){
+    for(int k=0;k<=1100;k++){
+        for(int j=0;j<=d;j++){
+            dp[i+1][min(k+j , 1100)] = max(dp[i+1][min(k+j , 1100)] , dp[i][k] + (min(k+j , 1100)));
+            dp[i+1][max(1 , k-j)] = max(dp[i+1][max(1 , k-j)] , dp[i][k] + max(1 ,k-j));
+        }
     }
   }
- 
-  int ans = 0;
- 
-  for(int i=1;i<=n;i++){
-    if(dp[n][i]==1e9){
-     
-       ans++;
-    }
-  }
-  cout<<ans<<endl;
+   
+  cout<<dp[t][final]<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 solve();
 }

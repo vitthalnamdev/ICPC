@@ -37,48 +37,44 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
-  int n;cin>>n;
-  vector<int>arr(n);
-  for(int i=0;i<n;i++)cin>>arr[i];
-  vector<int>freq(n+1 , 0);
-  for(int i=0;i<n;i++){
-    freq[arr[i]]++;
-  }
- 
-  arr.clear();
-  for(int i=1;i<=n;i++){
-     if(freq[i]>0){
-       arr.push_back(freq[i]);
+   int n , m , q;cin>>n>>m>>q;
+   vector<vector<int>>grid(n , vector<int>(m));
+   for(int i=0;i<n;i++){
+    for(int j=0;j<m;j++){
+        cin>>grid[i][j];
+    }
+   }
+   vector<int>dp(n);
+   for(int i=0;i<n;i++){
+    int mx = 0;
+    int cnt = 0;
+    for(int j=0;j<m;j++){
+       if(grid[i][j])cnt++;
+       else cnt = 0;
+       mx = max(mx , cnt);
+    }
+     dp[i] = mx;
+   }
+   while(q--)
+   {
+    int x , y;cin>>x>>y;x--;y--;
+     grid[x][y]^=1;
+     int cnt = 0;int mx = 0;
+     for(int i=0;i<m;i++){
+        if(grid[x][i])cnt++;
+        else cnt = 0;
+        mx = max(mx , cnt);
      }
-  }
-  n = arr.size();
-  vector<vector<int>>dp(n+1 , vector<int>(n+1 , 1e9));
-  for(int i=1;i<=n;i++){
-    dp[i][0] = 0;
-  }
-  for(int i=1;i<=n;i++){
-    for(int j=1;j<i;j++){
-       
-       if((i-j)>=(arr[i-1] + dp[i-1][j-1]))
-        dp[i][j] = min(dp[i-1][j] , dp[i-1][j-1] + arr[i-1]);
-       else
-        dp[i][j] = dp[i-1][j];
-    }
-  }
- 
-  int ans = 0;
- 
-  for(int i=1;i<=n;i++){
-    if(dp[n][i]==1e9){
-     
-       ans++;
-    }
-  }
-  cout<<ans<<endl;
+     dp[x] = mx;
+     int ans = 0;
+     for(int i=0;i<n;i++){
+       ans = max(ans , dp[i]);
+     }cout<<ans<<endl;
+   }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 solve();
 }

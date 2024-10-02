@@ -1,0 +1,49 @@
+BEGIN:VCALENDAR
+PRODID:-//Google Inc//Google Calendar 70.9054//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VTIMEZONE
+TZID:Asia/Kolkata
+X-LIC-LOCATION:Asia/Kolkata
+BEGIN:STANDARD
+TZOFFSETFROM:+0530
+TZOFFSETTO:+0530
+TZNAME:GMT+5:30
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTART;TZID=Asia/Kolkata:20240722T163000
+DTEND;TZID=Asia/Kolkata:20240722T164500
+DTSTAMP:20240719T121447Z
+ORGANIZER;CN=Mahalakshmi Dhandayuthapani:mailto:dmahalakshmi@xwf.google.com
+UID:c94sbqqalga18eta4b77r95ijg@google.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE
+ ;CN=Mahalakshmi Dhandayuthapani;X-NUM-GUESTS=0:mailto:dmahalakshmi@xwf.goog
+ le.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
+ TRUE;CN=vitthal7804@gmail.com;X-NUM-GUESTS=0:mailto:vitthal7804@gmail.com
+X-GOOGLE-CONFERENCE:https://meet.google.com/woq-ifqq-jhp
+X-MICROSOFT-CDO-OWNERAPPTID:1880253897
+CREATED:20240719T090239Z
+DESCRIPTION:<b>Booked by</b>\nVitthal Namdev\nvitthal7804@gmail.com\n639549
+ 1606\n<br>Hello!  \n\nWonderful to e-meet you for the initial discussion!\n
+ \nThe discussion will be over Google Meet.\n\nIt will be to understand your
+  academic projects / internships and your role in them.\n\nAlso please be a
+ vailable for the call as per the time slot.\n\n-::~:~::~:~:~:~:~:~:~:~:~:~:
+ ~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-\nJoin with Goog
+ le Meet: https://meet.google.com/woq-ifqq-jhp\nOr dial: (IN) +91 22 7127 96
+ 96 PIN: 9900094094716#\nMore phone numbers: https://tel.meet/woq-ifqq-jhp?p
+ in=9900094094716&hs=7\n\nLearn more about Meet at: https://support.google.c
+ om/a/users/answer/9282720\n\nPlease do not edit this section.\n-::~:~::~:~:
+ ~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-
+LAST-MODIFIED:20240719T121446Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Initial Discussion - Google Summer Internship 2025  (Vitthal Namdev
+ )
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR
