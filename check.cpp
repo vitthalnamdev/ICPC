@@ -1,55 +1,84 @@
-// Don't look the rank , if you want a good rank
-#include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <climits>
+
 using namespace std;
-  #define ll long long 
-#pragma GCC optimize("O3")
-#pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
-#pragma GCC optimize("unroll-loops")
-////--------- DEBUG START---------////
-#define debug(x) cerr << #x <<" "; _print(x); cerr<< endl;
-void _print(int a){cerr<<a;}
-void _print(char a){cerr<<a;}
-void _print(long long int a ){cerr<<a;}
-void _print(string a){cerr<<a;}
-void _print(bool a){cerr << a;}
-template<class T1 , class T2>void _print(pair<T1,T2>a){cerr<<"{ ";cerr<<a.first<<" "<<a.second;cerr<<" }";}
-template<class T>void _print(vector<T>&a){cerr<<"[ ";for(T i:a){_print(i);cerr<<" ";}cerr<<" ]";}
-template<class T>void _print(set<T>&a){cerr<<"[ ";for(T i:a){_print(i);cerr<<" ";}cerr<<" ]";}
-template<class T>void _print(multiset<T>&a){cerr<<"[ ";for(T i:a){_print(i);cerr<<" ";}cerr<<" ]";}
-////------DEBUG END---------////
-int mod = 1e9+7;
-ll inv(ll a) {
-return a <= 1 ? a : mod - (long long)(mod/a) * inv(mod % a) % mod;
-}
-long long binpow(long long a, long long b, long long m) {
-a %= m;
-long long res = 1;
-while (b > 0) {
-if (b & 1)
-res = res * a % m;
-a = a * a % m;
-b >>= 1;
-}
-return res;
-}
-#define cntone(x) __builtin_popcountll(x)
-#define trailzero(x) __builtin_clzll(x)
-#define trailone(x) __builtin_ctzll(x)
-// flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-void solve(){
-    ll k;cin>>k;
-    ll x = sqrt(k);
-    k+=x;
-    ll now = sqrt(k);
-    if(now>x){
-        k++;
+
+const int INF = INT_MAX;
+
+// Define the segment tree and lazy arrays
+vector<int> t;
+vector<int> lazy;
+
+// Build the segment tree
+void build(vector<int>& a, int v, int tl, int tr) {
+    if (tl == tr) {
+        t[v] = a[tl];
+    } else {
+        int tm = (tl + tr) / 2;
+        build(a, v*2, tl, tm);
+        build(a, v*2+1, tm+1, tr);
+        t[v] = max(t[v*2], t[v*2 + 1]);
     }
-    cout<<k<<endl;
 }
-int main(){
-std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
-while(t--){
-solve();
+
+// Push updates to the children
+void push(int v) {
+    t[v*2] += lazy[v];
+    lazy[v*2] += lazy[v];
+    t[v*2+1] += lazy[v];
+    lazy[v*2+1] += lazy[v];
+    lazy[v] = 0;
 }
+
+// Update the segment tree in the range [l, r]
+void update(int v, int tl, int tr, int l, int r, int addend) {
+    if (l > r) 
+        return;
+    if (l == tl && tr == r) {
+        t[v] += addend;
+        lazy[v] += addend;
+    } else {
+        push(v);
+        int tm = (tl + tr) / 2;
+        update(v*2, tl, tm, l, min(r, tm), addend);
+        update(v*2+1, tm+1, tr, max(l, tm+1), r, addend);
+        t[v] = max(t[v*2], t[v*2+1]);
+    }
+}
+
+// Query the maximum value in the range [l, r]
+int query(int v, int tl, int tr, int l, int r) {
+    if (l > r)
+        return -INF;
+    if (l == tl && tr == r)
+        return t[v];
+    push(v);
+    int tm = (tl + tr) / 2;
+    return max(query(v*2, tl, tm, l, min(r, tm)), 
+               query(v*2+1, tm+1, tr, max(l, tm+1), r));
+}
+
+int main() {
+    // Example array
+    vector<int> a = {1, 3, -2, 8, -7};
+
+    // Initialize the segment tree and lazy arrays
+    int n = a.size();
+    t.resize(4 * n);
+    lazy.resize(4 * n, 0);
+
+    // Build the segment tree
+    build(a, 1, 0, n - 1);
+
+    // Update the segment tree
+    update(1, 0, n - 1, 1, 3, 3);
+
+    // Query the segment tree
+    int result = query(1, 0, n - 1,  0 , 1);
+    cout << "Maximum value in the range [2, 4]: " << result << endl;
+
+    return 0;
 }
