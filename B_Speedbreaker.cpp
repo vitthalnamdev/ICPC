@@ -38,10 +38,10 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-
  
 
- 
+
+
 
 bool checkoptimized(vector<int>&p , vector<int>&s , vector<int>&time , vector<int>&pref , int ind){
    int n = time.size();
@@ -50,13 +50,21 @@ bool checkoptimized(vector<int>&p , vector<int>&s , vector<int>&time , vector<in
       
    }
    time[s[ind]]--;
-   
+   int prev = 0;
+   for(int i=1;i<n;i++){
+      prev+=time[i];
+      if(prev>i){
+         return false;
+      }
+   }
+   return true;
 }
 void solve(){
+   
    int n;cin>>n;
    vector<int>arr(n);
    for(int i=0;i<n;i++)cin>>arr[i];
-   
+
    int cnt = 0;
    vector<int>pref(n),suff(n);
    int x = n;
