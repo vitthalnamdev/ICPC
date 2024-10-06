@@ -37,7 +37,25 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
-   
+ ll n;cin>>n;
+ ll q;cin>>q;
+ vector<ll>arr(n);
+ for(ll i=0;i<n;i++)cin>>arr[i];
+ vector<int>limit(n+1,0);
+ for(ll i=0;i<n;i++){
+    int now = (n-i-1);
+    for(ll j=i;j<n;j++){
+        limit[j]+=(now--);
+    }
+ }
+ map<ll,ll>ans;
+ 
+  
+ while(q--)
+ {
+    ll x;cin>>x;
+    cout<<ans[x]<<" ";
+ }cout<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

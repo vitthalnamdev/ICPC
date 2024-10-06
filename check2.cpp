@@ -36,13 +36,64 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-void solve(){
-   
+// static void run_with_stack_size(void (*func)(void), size_t stsize) {
+//     char *stack, *send;
+//     stack = (char *)malloc(stsize);
+//     send = stack + stsize - 16;
+//     send = (char *)((uintptr_t)send / 16 * 16);
+//     asm volatile(
+//         "mov %%rsp, (%0)\n"
+//         "mov %0, %%rsp\n"
+//         :
+//         : "r"(send));
+//     func();
+//     asm volatile("mov (%0), %%rsp\n" : : "r"(send));
+//     free(stack);
+// }
+
+
+const int N = 10000010;
+vector<int>prime(N,0);
+void sieve(){
+ for(int i=0;i<N;i++){
+    prime[i] = i;
+ }
+ for(int i=2;i*i<N;i++)
+ {
+    for(int j=i*i;j<N;j+=i)
+    {
+        if(prime[j]==j){
+            prime[j] = i;
+        }
+    }
+ }
+ 
 }
-int main(){
+
+void solve(){
+  int n;cin>>n;
+   if(n<=4){
+    cout<<0<<endl;
+   }
+ int ans = 2;
+ for(int i=6;i<=n;i++){
+     if(prime[i] && prime[i-2]){
+        ans++;
+     }
+ } cout<<ans<<endl;   
+}
+int main_() {
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
 int t;cin>>t;
+int cnt = 0;
+sieve();
 while(t--){
+cout<<"Case #"<<cnt<<": ";
 solve();
+cnt++;
 }
+    // implement your solution here
 }
+// int main(){
+// run_with_stack_size(main_, 1024 * 1024 * 1024);
+// }

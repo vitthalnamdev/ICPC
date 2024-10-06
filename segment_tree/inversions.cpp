@@ -36,13 +36,35 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-void solve(){
-   
+static void run_with_stack_size(void (*func)(void), size_t stsize) {
+    char *stack, *send;
+    stack = (char *)malloc(stsize);
+    send = stack + stsize - 16;
+    send = (char *)((uintptr_t)send / 16 * 16);
+    asm volatile(
+        "mov %%rsp, (%0)\n"
+        "mov %0, %%rsp\n"
+        :
+        : "r"(send));
+    func();
+    asm volatile("mov (%0), %%rsp\n" : : "r"(send));
+    free(stack);
 }
-int main(){
+
+void main_() {
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
 int t;cin>>t;
 while(t--){
 solve();
 }
+    // implement your solution here
+}
+void solve(){
+  int n;cin>>n;
+  vector<int>per(n+1);
+  for(int i=1;i<=n;i++)cin>>per[i];
+  
+}
+int main(){
+run_with_stack_size(main_, 1024 * 1024 * 1024);
 }

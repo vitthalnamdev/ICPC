@@ -36,55 +36,28 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-class segment{
-  int n ;
-  public:
-  vector<vector<ll>>tree;
-  segment(ll n){
-     this->n = n;
-     tree.assign(4*n+4 , vector<ll>(4 ,0));
-  }
-  vector<ll> build(vector<ll>&arr , int l , int r , int ind)
-  {
-     if(l==r){tree[ind][0] = arr[l]; tree[ind][1] = max(0LL , arr[l]); tree[ind][2] = max(0LL , arr[l]);tree[ind][3] = arr[l];return tree[ind];}
-     int mid = (l+r)/2;
-     auto left = build(arr , l , mid , 2*ind+1);
-     auto right = build(arr , mid+1 , r , 2*ind+2);
-     tree[ind][0] = max(left[0] , max(right[0] , left[1] + right[2]));
-     
-  }
-  vector<ll> query(int l , int r , int a , int b , int ind)
-  { 
-    if(l>b || r<a){} 
-    if(l>=a && r<=b){return tree[ind];}
-    int mid = (l+r)/2;
-    auto left = query(l , mid , a , b , 2*ind+1);
-    auto right = query(mid +1 , r , a , b , 2*ind+2);
-    return min(left , right);
-  }
-  vector<ll> update(int l ,int r , int i , int ind , int val)
-  {
-      if(l>i || r<i){return tree[ind];}
-      if(l==r && l==i){
-         
-      }
-      int mid = (l+r)/2;
-      auto left = update(l , mid , i , 2*ind+1 , val);
-      auto  right = update(mid+1 ,r , i , 2*ind+2 , val);
-      return tree[ind] = min(left , right);
-  }
-};
-
 void solve(){
-   int n , m ;cin>>n>>m;
-   vector<ll>arr(n);
-   for(int i=0;i<n;i++)cin>>arr[i];
-   segment t(n+1 );
-   t.build(arr , 0 , n-1 , 0);
+ int n;cin>>n;
+ vector<int>arr(n);
+ for(int i=0;i<n;i++)cin>>arr[i];
+ int result = 0;
+ int mx = 0;
+ int ans = 0;
+ for(int i=0;i<n;i+=2){
+     ans++;
+     mx = max(mx , arr[i]);
+ }
+ result = max(result , ans + mx);
+ ans = 0 , mx = 0;
+ for(int i=1;i<n;i+=2){
+     ans++;mx = max(mx , arr[i]);
+ }
+ result = max(result , ans + mx);
+ cout<<result<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

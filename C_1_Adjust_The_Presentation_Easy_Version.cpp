@@ -37,7 +37,26 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
-   
+  int n , m , q;cin>>n>>m>>q;
+  vector<int>arr(n);
+  vector<int>brr(m);
+  for(int i=0;i<n;i++)cin>>arr[i];
+  for(int i=0;i<m;i++)cin>>brr[i];
+  map<int,int>check;
+  int p1 = -1;
+  for(int i=0;i<m;i++){
+     if(p1>=n && check[brr[i]]==0){
+          cout<<"TIDAK"<<endl;return;
+     }else if(p1<n){
+          if(p1>=0)check[arr[p1]]=1;
+          if(p1+1<n && arr[p1+1]==brr[i])p1++;
+          if(p1>=0 && p1<n){check[arr[p1]] = 1;}
+          if(check[brr[i]]==0){
+               cout<<"TIDAK"<<endl;return;
+          }
+     }
+  }
+  cout<<"YA"<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
