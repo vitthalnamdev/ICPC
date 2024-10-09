@@ -36,24 +36,65 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+class segment{
+  vector<int>tree;
+  int n ;
+  public:
+  segment(ll n){
+     this->n = n;
+     tree.assign(4*n+4 , 0);
+  }
+  int build(vector<int>&arr , int l , int r , int ind)
+  {
+     if(l==r){return tree[ind] = arr[l];}
+     int mid = (l+r)/2;
+     int left = build(arr , l , mid , 2*ind+1);
+     int right = build(arr , mid+1 , r , 2*ind+2);
+     return tree[ind] = (left + right);
+  }
+  int query(int l , int r , int a , int b , int ind)
+  { 
+    if(l>b || r<a){return 0;} 
+    if(l>=a && r<=b){return tree[ind];}
+    int mid = (l+r)/2;
+    int left = query(l , mid , a , b , 2*ind+1);
+    int right = query(mid +1 , r , a , b , 2*ind+2);
+    return (left + right);
+  }
+  ll update(int l ,int r , int i , int ind , int val)
+  {
+      if(l>i || r<i){return tree[ind];}
+      if(l==r && l==i){
+         return tree[ind] = val;
+      }
+      int mid = (l+r)/2;
+      int left = update(l , mid , i , 2*ind+1 , val);
+      int right = update(mid+1 ,r , i , 2*ind+2 , val);
+      return tree[ind] = (left + right);
+  }
+};
+
 void solve(){
  int n ,q;cin>>n>>q;
- vector<int>arr(n);
- for(int i=0;i<n;i++)cin>>arr[i];
+ vector<int>arr(n+1 , 0);
+ segment t(n+1);
+ t.build(arr , 0 , n-1 , 0);
  while(q--)
  {
     int x;cin>>x;
     if(x==2){
-
+        int ind;cin>>ind;
+        cout<<t.query(0,n-1,0,ind,0)<<endl;
     }else{
-        int a , b , u;cin>>a>>b>>u;
-        
+        ll a , b , u;cin>>a>>b>>u;
+        t.update(0,n-1,a,0,u);
+        t.update(0,n-1,b,0,-u);
     }
  }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 solve();
 }

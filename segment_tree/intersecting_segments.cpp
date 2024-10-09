@@ -73,13 +73,12 @@ class segment{
       return tree[ind] = (left + right);
   }
 };
-
 void solve(){
   int n;cin>>n;
   vector<int>arr(2*n);
   for(int i=0;i<2*n;i++)cin>>arr[i];
   vector<int>ind(2*n,-1);
-  vector<int>ans(n+1);
+  vector<int>ans(n+1 , 0);      
   segment t(2*n+1);
   vector<int>per(2*n+1,0);
   t.build(per , 0,2*n-1 , 0);
@@ -90,8 +89,22 @@ void solve(){
     }else{
        t.update(0,2*n-1 , ind[arr[i]] , 0 , 0);
        int now =  t.query(0,2*n-1 , ind[arr[i]] , i , 0);
-       ans[arr[i]] = now;
-      // t.update(0,2*n-1 , i , 0,1); 
+       ans[arr[i]] = now; 
+    }
+  }
+  segment t1(2*n+1);
+  for(int i=0;i<2*n;i++)per[i]=0;
+  t1.build(per , 0 , 2*n-1 , 0);
+  for(int i=0;i<2*n;i++)ind[i] = -1;
+  for(int i=2*n-1;i>=0;i--){
+      if(ind[arr[i]]==-1){
+       ind[arr[i]] = i;     
+       t1.update(0,2*n-1 , i,0,1);
+    }else{
+         
+       t1.update(0,2*n-1 , ind[arr[i]] , 0 , 0);
+       int now =  t1.query(0,2*n-1 , i , ind[arr[i]] , 0);
+       ans[arr[i]]+= now; 
     }
   }
   for(int i=1;i<=n;i++){
