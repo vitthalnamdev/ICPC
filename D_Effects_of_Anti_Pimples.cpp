@@ -36,91 +36,35 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
-string ahu(vector<int>adj[] , int n ){
-  vector<int>indegree(n+1);
-  queue<int>q;
-  map<int,string>val;
+void solve(){
+int mod = 998244353;
+  int n;cin>>n;
+  vector<pair<ll,ll>>arr(n+1);
+  for(int i=1;i<=n;i++)cin>>arr[i].first,arr[i].second=i;  
+  auto brr = arr;
+  arr[0].first = INT_MAX;
+  brr[0].first = INT_MAX;
+  sort(arr.begin() , arr.end() , [](pair<int,int> a , pair<int,int>b){return a.first>b.first;});
+  ll ans = 0;
   for(int i=1;i<=n;i++){
-    indegree[i] = adj[i].size();
-    if(indegree[i]==1){
-        q.push(i);
+    int ele = arr[i].second;
+    for(int j=1;j*j<=ele;j++){
+      if((ele%j)==0){
+        brr[j].first = max(brr[j].first , arr[i].first);
+        int nex = ele/j;
+        brr[nex].first = max(brr[nex].first , arr[i].first);
+      }
     }
   }
-
-  vector<int>center;
-  while(!q.empty())
-  {  
-     center.clear();
-     while(!q.empty()){
-        center.push_back(q.front());
-        q.pop();
-     }
-     for(int i=0;i<center.size();i++)
-     {
-        for(auto j:adj[center[i]])
-        {
-            val[j]+=val[center[i]];
-            indegree[j]--;
-            if(indegree[j]==1){
-                q.push(j);
-                val[j] = '(' + val[j] + ')';
-            }
-        }
-     }
-  }
+  sort(brr.begin() , brr.end(),[](pair<int,int>a , pair<int,int>b){return a.first>b.first;});
    
-  if(center.size()==1){
-     return val[center[0]];
-  }else{
-  
-     vector<string>result = {val[center[0]] , val[center[1]]};
-     sort(result.begin() , result.end());
-     return ('(' +  result[0] + result[1] + ')');
+  for(int i=1;i<=n;i++){
+     ll mx = brr[i].first; 
+     ans+=((mx*binpow(2,n-i,mod))%mod);
+     ans%=mod;
   }
-}
-
-class Dsu{
-  public:
- Dsu(int x){
-     rank = new int[x+1];
-     parent = new int[x+1];
-     for(int i = 0;i<=x;i++)rank[i] = 0;
-     for(int i = 0;i<=x;i++)parent[i] = i;
- }
- int* rank;
- int*parent;
- 
- int find(int a){
-    if(parent[a]==a)return a;
-    return find(parent[a]);
- }
-
- bool same(int a , int b){
-    return find(a)==find(b);
- }
- 
- bool Draw_edge(int a, int b){
-     int parenta = find(a);
-     int parentb = find(b);
- 
-     if(parenta==parentb){return false;}
-     
-     if(rank[parenta]>rank[parentb]){
-        parent[parentb] = parenta;
-     }else if(rank[parentb]> rank[parenta]){
-        parent[parenta] = parentb;
-     }
-     else{
-        parent[parentb] = parenta;
-        rank[parenta]++;
-     }
- 
-     return true;
- }
-};
-
-void solve(){
- 
+  cout<<ans<<endl;
+   
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

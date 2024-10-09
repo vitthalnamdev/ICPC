@@ -36,49 +36,61 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+
 void solve(){
-  int n;cin>>n;
-  vector<int>adj[n+1];
-  vector<int>indegree(n+1 , 0);
-  for(int i=1;i<n;i++){
-    int a , b;cin>>a>>b;
-    adj[a].push_back(b);
-    adj[b].push_back(a);
-    indegree[b]++;indegree[a]++;
-  }
-  int count = 0;
-  queue<int>q;
-  for(int i=1;i<=n;i++){
-    if(indegree[i]==1){
-        q.push(i);count++;
-        indegree[i]--;
+ int n;cin>>n;
+ vector<ll>arr(n);
+ for(int i=0;i<n;i++)cin>>arr[i];
+ sort(arr.begin(),arr.end());
+ vector<ll>divs;
+ for(int i=1;i*i<=arr.back();i++) 
+ {
+    if((arr.back()%i)==0){
+        divs.push_back(i);
+        if(arr.back()/i!=i)
+        divs.push_back(arr.back()/i);
     }
-  }  
-  vector<int>center;
-   
-  while(!q.empty())
-  {  
-   
-     center.clear();
-     while(!q.empty()){
-        center.push_back(q.front());
-        q.pop();
+ }
+ sort(divs.begin(),divs.end());
+ auto Find = [&](int ele){
+     auto it =  lower_bound(divs.begin() , divs.end() , ele);
+     if(it==divs.end() || (*it!=ele)){
+        return -1;
      }
-     for(int i=0;i<center.size();i++){
-        for(auto j:adj[center[i]])
-        {
-            indegree[j]--;
-            if(indegree[j]==1){
-                q.push(j);
-            }
-        }
+     return it-divs.begin();
+ };
+  for(int i=0;i<n;i++){
+    if(Find(arr[i])==-1){
+        cout<<n<<endl;return;
+    }
+  }
+  int sz = divs.size();
+  vector<int>dp(sz,INT_MIN); 
+  dp[0] = 0; 
+  for(ll i:arr){
+     
+     for(int j=sz-1;j>=0;j--){
+         ll g = (i*divs[j])/__gcd(i,divs[j]);
+         int id = (Find(g));
+          
+         dp[id] = max(dp[id] , dp[j] + 1);
+     }
+      
+  }
+  
+ 
+
+  int ans = 0;
+  for(int i=0;i<sz;i++){
+     if(find(arr.begin() , arr.end() , divs[i])==arr.end()){
+        ans = max(ans , dp[i]);
      }
   }
-  for(auto i:center){cout<<i<<" ";}cout<<endl;
+  cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

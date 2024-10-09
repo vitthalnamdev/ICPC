@@ -38,47 +38,36 @@ return res;
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
   int n;cin>>n;
-  vector<int>adj[n+1];
-  vector<int>indegree(n+1 , 0);
-  for(int i=1;i<n;i++){
-    int a , b;cin>>a>>b;
-    adj[a].push_back(b);
-    adj[b].push_back(a);
-    indegree[b]++;indegree[a]++;
+  cout<<32<<endl;
+  vector<int>ans(32);
+  for(int i=0;i<32;i++){
+     int now = (n&(1<<i));
+     if(now){
+        ans[i] = 1;
+     }else{
+        ans[i] = 0;
+     }
   }
-  int count = 0;
-  queue<int>q;
-  for(int i=1;i<=n;i++){
-    if(indegree[i]==1){
-        q.push(i);count++;
-        indegree[i]--;
+  for(int i=0;i<31;i++){
+    if(ans[i]==1 && ans[i+1]==1)
+    {
+       ans[i]=-1;i++;
+       while(i<32 && ans[i]==1){
+         ans[i] = 0;
+         i++;
+       }
+       ans[i] = 1;
+       i--;
     }
-  }  
-  vector<int>center;
-   
-  while(!q.empty())
-  {  
-   
-     center.clear();
-     while(!q.empty()){
-        center.push_back(q.front());
-        q.pop();
-     }
-     for(int i=0;i<center.size();i++){
-        for(auto j:adj[center[i]])
-        {
-            indegree[j]--;
-            if(indegree[j]==1){
-                q.push(j);
-            }
-        }
-     }
   }
-  for(auto i:center){cout<<i<<" ";}cout<<endl;
+  for(int i=0;i<32;i++){
+    cout<<ans[i]<<" ";
+  }cout<<endl;
+
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

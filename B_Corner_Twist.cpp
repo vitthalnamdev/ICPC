@@ -1,7 +1,7 @@
 // Don't look the rank , if you want a good rank
 #include<bits/stdc++.h>
 using namespace std;
-  #define ll long long 
+#define ll long long 
 #pragma GCC optimize("O3")
 #pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
 #pragma GCC optimize("unroll-loops")
@@ -37,48 +37,49 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
-  int n;cin>>n;
-  vector<int>adj[n+1];
-  vector<int>indegree(n+1 , 0);
-  for(int i=1;i<n;i++){
-    int a , b;cin>>a>>b;
-    adj[a].push_back(b);
-    adj[b].push_back(a);
-    indegree[b]++;indegree[a]++;
+  int n , m;cin>>n>>m;
+  vector<vector<int>>arr(n,vector<int>(m));
+  vector<vector<int>>brr(n,vector<int>(m));
+  for(int i=0;i<n;i++){
+     string a;cin>>a;
+     for(int j=0;j<m;j++){
+         arr[i][j] = (a[j]-'0');
+     }
   }
-  int count = 0;
-  queue<int>q;
-  for(int i=1;i<=n;i++){
-    if(indegree[i]==1){
-        q.push(i);count++;
-        indegree[i]--;
+  for(int i=0;i<n;i++){
+     string a;cin>>a;
+     for(int j=0;j<m;j++){
+        brr[i][j] = (a[j]-'0');
+     }
+  }
+  for(int i=0;i<n;i++){
+     int sum1 = 0 , sum2=0;
+     for(int j=0;j<m;j++){
+          sum1+=(arr[i][j]);
+          sum2+=(brr[i][j]);
+     }
+     sum1%=3;sum2%=3;
+     if(sum1!=sum2){
+         cout<<"NO"<<endl;return;
+     }
+  }
+  for(int i=0;i<m;i++){
+    int sum1=0,sum2=0;
+    for(int j=0;j<n;j++){
+        sum1+=(arr[j][i]);
+        sum2+=(brr[j][i]);
     }
-  }  
-  vector<int>center;
-   
-  while(!q.empty())
-  {  
-   
-     center.clear();
-     while(!q.empty()){
-        center.push_back(q.front());
-        q.pop();
-     }
-     for(int i=0;i<center.size();i++){
-        for(auto j:adj[center[i]])
-        {
-            indegree[j]--;
-            if(indegree[j]==1){
-                q.push(j);
-            }
-        }
-     }
+    sum1%=3;sum2%=3;
+    if(sum1!=sum2){
+        cout<<"NO"<<endl;return;
+    }
   }
-  for(auto i:center){cout<<i<<" ";}cout<<endl;
+  cout<<"YES"<<endl;
+
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

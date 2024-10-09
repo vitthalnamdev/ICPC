@@ -37,48 +37,22 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
-  int n;cin>>n;
-  vector<int>adj[n+1];
-  vector<int>indegree(n+1 , 0);
-  for(int i=1;i<n;i++){
-    int a , b;cin>>a>>b;
-    adj[a].push_back(b);
-    adj[b].push_back(a);
-    indegree[b]++;indegree[a]++;
-  }
-  int count = 0;
-  queue<int>q;
-  for(int i=1;i<=n;i++){
-    if(indegree[i]==1){
-        q.push(i);count++;
-        indegree[i]--;
-    }
-  }  
-  vector<int>center;
-   
-  while(!q.empty())
-  {  
-   
-     center.clear();
-     while(!q.empty()){
-        center.push_back(q.front());
-        q.pop();
-     }
-     for(int i=0;i<center.size();i++){
-        for(auto j:adj[center[i]])
-        {
-            indegree[j]--;
-            if(indegree[j]==1){
-                q.push(j);
-            }
-        }
-     }
-  }
-  for(auto i:center){cout<<i<<" ";}cout<<endl;
+   int n , m , k;cin>>n>>m>>k;
+   if(k>3){
+    cout<<0<<endl;return;
+   } 
+   if(k==1){
+     cout<<1<<endl;return;
+   }
+   if(k==3){
+     cout<<m-min(m,n-1)-m/n<<endl;
+   }else{
+      cout<<min(m,n-1) + m/n<<endl;
+   }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }
