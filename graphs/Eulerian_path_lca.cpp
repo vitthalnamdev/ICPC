@@ -101,7 +101,7 @@ class Euler_Lca
     }
     class Table
     {
-    public:
+        public:
         pair<int, int> mini(pair<int, int> &a, pair<int, int> &b)
         {
             if (a.first < b.first)

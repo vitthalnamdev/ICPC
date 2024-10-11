@@ -1,10 +1,10 @@
 // Don't look the rank , if you want a good rank
 #include<bits/stdc++.h>
 using namespace std;
-#define ll long long 
-// #pragma GCC optimize("O3")
-// #pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
-// #pragma GCC optimize("unroll-loops")
+  #define ll long long 
+#pragma GCC optimize("O3")
+#pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
+#pragma GCC optimize("unroll-loops")
 ////--------- DEBUG START---------////
 #define debug(x) cerr << #x <<" "; _print(x); cerr<< endl;
 void _print(int a){cerr<<a;}
@@ -37,15 +37,36 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
-int cnt = 0;
- for(int i=1;i<=2e9;i++){
-    cnt++;
+ int n , m;cin>>n>>m;
+ vector<vector<int>>arr(n , vector<int>(m));
+ for(int i=0;i<n;i++){
+    for(int j=0;j<m;j++){
+        arr[i][j] = 2;
+    }
  }
- cout<<cnt<<endl;
+ for(int i=0;i<min(n,m);i++){
+      arr[i][i] = 3;
+ }
+ for(int i=n;i<m;i++){
+    arr[n-1][i] = 3;
+ }
+ if(n>m){
+   int j =0;
+   for(int i=m;i<n;i++){
+      arr[i][j++]=3;
+      j%=m;
+   }
+ }
+ for(int i=0;i<n;i++){
+    for(int j=0;j<m;j++){
+       cout<<arr[i][j]<<" ";
+    }cout<<endl;
+ }
+
 }
 int main(){
-// std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
+int t;cin>>t;
 while(t--){
 solve();
 }

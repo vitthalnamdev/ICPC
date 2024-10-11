@@ -1,10 +1,10 @@
 // Don't look the rank , if you want a good rank
 #include<bits/stdc++.h>
 using namespace std;
-#define ll long long 
-// #pragma GCC optimize("O3")
-// #pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
-// #pragma GCC optimize("unroll-loops")
+  #define ll long long 
+#pragma GCC optimize("O3")
+#pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
+#pragma GCC optimize("unroll-loops")
 ////--------- DEBUG START---------////
 #define debug(x) cerr << #x <<" "; _print(x); cerr<< endl;
 void _print(int a){cerr<<a;}
@@ -37,15 +37,35 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
-int cnt = 0;
- for(int i=1;i<=2e9;i++){
-    cnt++;
+ int n , m;cin>>n>>m;
+ string a , b;cin>>a>>b;
+ if(a==b){
+    cout<<0<<endl;return;
  }
- cout<<cnt<<endl;
-}
+ if(a[0]!=b[0]){
+    cout<<-1<<endl;return;
+ }
+    for(int i=0;i<min(n,m);i++){
+        if(a[i]!=b[i]){
+           int p1 = n-1;int p2 = m-1;
+           while(p1>=i && p2>=i){
+              if(a[p1]!=b[p2]){
+                 break;
+              }
+              p1--;p2--;
+           }
+           if(p1<i || p2<i){
+              cout<<1<<endl;return;
+           }else{
+              cout<<2<<endl;return;
+           }
+        }
+    }
+    cout<<1<<endl;
+ }
 int main(){
-// std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
+int t;cin>>t;
 while(t--){
 solve();
 }
