@@ -83,9 +83,9 @@ class Euler_Lca
 {
     public:
     int ind = 0;
+    
     void dfs(int node, int parent, vector<int> adj[], vector<int> &depth, vector<int> &nodes, int height)
     {
-
         for (auto i : adj[node])
         {
             if (i == parent)
@@ -99,12 +99,13 @@ class Euler_Lca
         depth[ind] = height;
         nodes[ind++] = node;
     }
+
     class Table
     {
         public:
         pair<int, int> mini(pair<int, int> &a, pair<int, int> &b)
         {
-            if (a.first < b.first)
+            if(a.first < b.first)
                 return a;
             return b;
         }

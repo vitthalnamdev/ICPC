@@ -1,10 +1,10 @@
 // Don't look the rank , if you want a good rank
 #include<bits/stdc++.h>
 using namespace std;
-#define ll long long 
-// #pragma GCC optimize("O3")
-// #pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
-// #pragma GCC optimize("unroll-loops")
+  #define ll long long 
+#pragma GCC optimize("O3")
+#pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
+#pragma GCC optimize("unroll-loops")
 ////--------- DEBUG START---------////
 #define debug(x) cerr << #x <<" "; _print(x); cerr<< endl;
 void _print(int a){cerr<<a;}
@@ -36,17 +36,49 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
+bool check(int start , int mid , int end){
+    cout<<"? "<<start<<" "<<mid<<endl;
+    cout.flush();
+    int len = mid - start + 1 ;
+    int cnt = 0;
+    for(int i=0;i<len;i++){
+        int x;cin>>x;
+        if(x>mid || x<start){
+             cnt++;
+        } 
+    }
+    len = len - cnt;
+    return (len&1);
+}
+
+ 
+
 void solve(){
-  double a = 1.0000000;
-  int b = a;
-  if(a>b){
-    b++;
+  int n;cin>>n;
+  int start = 1 , end = n;
+  while(end - start > 1)
+  {
+    int mid = (start + end )/2;
+    if(check(start , mid , end)){
+        end = mid;
+    }else{
+        start = mid+1;
+    }
   }
-  cout<<b<<endl;
+  cout<<"? "<<start<<" "<<start<<endl; 
+  cout.flush();
+  int x;cin>>x;
+  if(x==start){
+     cout<<"! "<<start<<endl;
+  }else{
+    cout<<"! "<<end<<endl;
+  }
+
+  cout.flush();
 }
 int main(){
-// std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
+int t;cin>>t;
 while(t--){
 solve();
 }
