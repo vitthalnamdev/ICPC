@@ -37,14 +37,27 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
-   int n;cin>>n;
-   int arr[n];
-   arr[-1] = 100;
-   cout<<arr[1]<<endl;
+  int n;cin>>n;int k;cin>>k;
+  vector<int>arr(n+1);
+  for(int i=1;i<=n;i++)cin>>arr[i];
+  vector<ll>prefix(k+1 , 1);
+  vector<ll>dp(k+1 , 0);
+  dp[0] = 1;
+  for(int i=1;i<=n;i++){
+       for(int j=0;j<=k;j++){
+          ll upp = prefix[j];
+          ll lower = (j-arr[i]>=1?prefix[j-arr[i]-1]:0);
+          dp[j] = (upp - lower + mod)%mod;
+       }
+       for(int j=1;j<=k;j++){
+         prefix[j] = dp[j] + prefix[j-1];
+       }
+  }
+  cout<<dp[k]%mod<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 solve();
 }

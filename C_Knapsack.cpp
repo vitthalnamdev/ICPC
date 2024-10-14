@@ -37,10 +37,29 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
-   int n;cin>>n;
-   int arr[n];
-   arr[-1] = 100;
-   cout<<arr[1]<<endl;
+  int n;cin>>n;ll w;cin>>w;
+  vector<pair<ll,ll>>arr(n);
+  for(int i=0;i<n;i++)cin>>arr[i].first , arr[i].second = i+1;
+  ll sum = 0;
+  vector<int>ans;
+  sort(arr.begin() , arr.end());
+   
+  for(int i=0;i<n;i++){
+     sum+=(arr[i].first);
+     if(sum>w){break;}
+     ans.push_back(arr[i].second);
+  }
+  ll checker = (w+1)/2;
+  if(sum<checker){
+    cout<<-1<<endl;return;
+  }
+  if(ans.size()==0){
+    cout<<-1<<endl;return;
+  }
+  cout<<ans.size()<<endl;
+  for(auto i:ans){
+    cout<<i<<" ";
+  }cout<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

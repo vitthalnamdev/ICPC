@@ -35,12 +35,20 @@ return res;
 #define cntone(x) __builtin_popcountll(x)
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
-//flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
+// flags to use  -std=c++17 -O2 -DLOCAL_PROJECT -Wshadow -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsanitize=address -fsanitize=undefined
 void solve(){
-   int n;cin>>n;
-   int arr[n];
-   arr[-1] = 100;
-   cout<<arr[1]<<endl;
+ string s;cin>>s;
+ int n = s.length();
+ int ans = INT_MAX;
+ for(int i=0;i<n;i++){
+    string check = "";
+   for(int j=0;j<n;j++){
+      if(i==j)continue;
+      check+=s[j];
+   }
+   ans = min(ans , stoi(check));
+ }
+cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

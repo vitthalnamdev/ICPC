@@ -36,15 +36,53 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
+std::string lcs(const std::string &a, const std::string &b) {
+    int m = a.size();
+    int n = b.size();
+
+    // Create a 2D vector to store the length of LCS
+    std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1, 0));
+
+    // Fill the dp array
+    for (int i = 1; i <= m; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            if (a[i - 1] == b[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = std::max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    // Reconstruct the LCS from the dp array
+    int index = dp[m][n];
+    std::string lcs_str(index, ' ');
+
+    int i = m, j = n;
+    while (i > 0 && j > 0) {
+        if (a[i - 1] == b[j - 1]) {
+            lcs_str[--index] = a[i - 1];
+            --i;
+            --j;
+        } else if (dp[i - 1][j] > dp[i][j - 1]) {
+            --i;
+        } else {
+            --j;
+        }
+    }
+
+    return lcs_str;
+}
 void solve(){
-   int n;cin>>n;
-   int arr[n];
-   arr[-1] = 100;
-   cout<<arr[1]<<endl;
+  int n , m;cin>>n>>m;
+  string a ,b;cin>>a>>b;
+  string c = lcs(a , b);
+  int ans = 0;
+  
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 solve();
 }
