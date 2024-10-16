@@ -1,10 +1,6 @@
 // Don't look the rank , if you want a good rank
 #include<bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
-using namespace __gnu_pbds;
-typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
   #define ll long long 
 #pragma GCC optimize("O3")
 #pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
@@ -40,11 +36,11 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
+vector<string>arr;
 void solve(){
-  int n;cin>>n;
-  int arr[n];
-  for(int i=0;i<n;i++)cin>>arr[i];
-   
+  int n ,m;cin>>n>>m;
+  arr.resize(n);
+  
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

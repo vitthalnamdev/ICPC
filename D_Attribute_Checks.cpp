@@ -40,11 +40,24 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
+vector<int>arr;
 void solve(){
-  int n;cin>>n;
-  int arr[n];
-  for(int i=0;i<n;i++)cin>>arr[i];
-   
+  int n;cin>>n;int m;cin>>m;
+  arr.resize(n);
+  for(int i=0;i<n;i++){
+    cin>>arr[i];
+  }
+  ordered_set s;
+  vector<vector<int>>dp(m+1 , vector<int>(m+1,0));
+  
+  for(int i=0;i<n;i++){
+    if(arr[i]==0){
+      
+    }else{
+
+    }
+  }
+  cout<<dp[m][m]<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

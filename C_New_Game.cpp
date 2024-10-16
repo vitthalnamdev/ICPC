@@ -1,10 +1,6 @@
 // Don't look the rank , if you want a good rank
 #include<bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
-using namespace __gnu_pbds;
-typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
   #define ll long long 
 #pragma GCC optimize("O3")
 #pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
@@ -41,10 +37,40 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
-  int n;cin>>n;
-  int arr[n];
-  for(int i=0;i<n;i++)cin>>arr[i];
-   
+ int n , k;cin>>n>>k;
+ vector<int>arr(n);
+ for(int i=0;i<n;i++){
+    cin>>arr[i];
+ }
+ sort(arr.begin() ,arr.end());
+ set<int>s;
+ int ans = 0;
+ int result = 0;
+ int p1 = 0;
+ map<int,int>cnt;
+ 
+ for(int i=0;i<n;i++){
+   if(i-1>=0 && arr[i-1]!=arr[i] && (arr[i-1] + 1)!=arr[i]){
+      s.clear();
+      cnt.clear();
+      p1 = i;
+      ans = 0;
+   }
+   s.insert(arr[i]);
+   cnt[arr[i]]++;
+   ans++;
+   while(s.size()>k){
+      ans--;
+      cnt[arr[p1]]--;
+      if(cnt[arr[p1]]==0){
+        s.erase(s.find(arr[p1]));
+      }
+      p1++;
+   }
+    
+   result = max(result , ans);
+ }
+ cout<<result<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

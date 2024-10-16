@@ -78,29 +78,42 @@ long long binpow(long long a, long long b, long long m)
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 // flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
- 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-    string a, b;
-    cin >> a >> b;
-    vector<vector<int>>dp(n+1 , vector<int>(m+1 , 0));
-    int ans = 0;
+    int n;
+    cin >> n;
+    vector<ll> arr(n);
+    for (int i = 0; i < n; i++)
+    {
+        cin >> arr[i];
+    }
+    vector<vector<ll>> dp(n + 1, vector<ll>(n + 1, LLONG_MAX));
+    ll prefix[n];
     for(int i=0;i<n;i++){
-        for(int j=0;j<m;j++){
-            if(a[i]==b[j]){
-              dp[i+1][j+1] = dp[i][j] + 2;
-            }
-            dp[i+1][j] = max(dp[i+1][j] , dp[i][j] - 1);
-            dp[i][j+1] = max(dp[i][j+1] , dp[i][j]-1);
-            ans = max(ans , dp[i+1][j+1]);
+        if(i==0){
+           prefix[i] = arr[i];continue;
         }
-    }cout<<dp[n][m]<<endl;
+        prefix[i] = arr[i] + prefix[i-1];
+    }
+    for (int i = n - 1; i >= 0; i--)
+    {
+        for (int j = i; j < n; j++)
+        {
+            if (i == j)
+            {
+                dp[i][j] = 0;
+                continue;
+            }
+            ll sum = prefix[j] - (i-1>=0?prefix[i-1]:0);
+            for (int k = i; k < j; k++)
+            {
+                dp[i][j] = min(dp[i][j], (dp[i][k] + dp[k + 1][j] + sum));
+            }
+        }
+    }
 
-   cout<<ans<<endl;
+    cout << dp[0][n - 1] << endl;
 }
-
 int main()
 {
     std::ios::sync_with_stdio(false);

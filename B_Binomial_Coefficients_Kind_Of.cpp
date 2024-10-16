@@ -1,10 +1,6 @@
 // Don't look the rank , if you want a good rank
 #include<bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
-using namespace __gnu_pbds;
-typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
   #define ll long long 
 #pragma GCC optimize("O3")
 #pragma GCC target("avx,avx2,sse,sse2,sse3,sse4,popcnt,fma")
@@ -40,16 +36,46 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
+const int N = 1e5+10;
+ll nCr(int n, int r) {
+    // If r is greater than n, return 0
+    if (r > n) return 0;
+    // If r is 0 or equal to n, return 1
+    if (r == 0 || n == r) return 1;
+    // Initialize the logarithmic sum to 0
+    double res = 0;
+    // Calculate the logarithmic sum of the numerator and denominator using loop
+    for (int i = 0; i < r; i++) {
+        // Add the logarithm of (n-i) and subtract the logarithm of (i+1)
+        res += log(n-i) - log(i+1);
+    }
+    // Convert logarithmic sum back to a normal number
+    return (int)round(exp(res));
+}
 void solve(){
-  int n;cin>>n;
-  int arr[n];
-  for(int i=0;i<n;i++)cin>>arr[i];
-   
+    int n;cin>>n;
+  vector<ll>arr(n);
+  vector<ll>k(n);
+  for(int i=0;i<n;i++){
+    cin>>arr[i];
+  }
+  for(int i=0;i<n;i++){
+     cin>>k[i];
+  }
+  for(int i=0;i<n;i++){
+  ll ans = binpow(2 , k[i] ,mod);
+  cout<<ans<<endl;
+  }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
-while(t--){
+//  for (int n = 0; n < N; n++) { // loop over n from 0 to N-1 (inclusive)
+//         C[n][0] = 1;
+//         C[n][n] = 1;
+//         for (int k = 1; k < n; k++) // loop over k from 1 to n-1 (inclusive)
+//             C[n][k] = C[n][k - 1] + C[n - 1][k - 1];
+//     }
+  
 solve();
-}
+ 
 }
