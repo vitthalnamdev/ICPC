@@ -85,7 +85,7 @@ void solve(){
         curr-=cnt[i];
      }
      if(curr<=0){
-      break;
+       break;
      }
   }
  

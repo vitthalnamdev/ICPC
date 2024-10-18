@@ -41,64 +41,25 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
-  int N;cin>>N;
-  vector<int>arr(2*N);
-  for(int i=0;i<2*N;i++)cin>>arr[i];
-  int mx = 0;
-  int ind = 0;
-  vector<int>cnt(2*N+1,0);
-  for(int i=0;i<2*N;i++){
-     if(arr[i]<=mx){
-       cnt[ind]++;
-     }else{
-       cnt[++ind]++;
-       mx = arr[i];
-     }
+  int n;cin>>n;
+  vector<pair<int,int>>arr(n);
+  for(int i=0;i<n;i++){
+     cin>>arr[i].first>>arr[i].second;
   }
-  vector<int>vis(2*N+1 , 0);
-  vis[0] = 1;
-  vector<vector<int>>from(2*N+1 , vector<int>(2*N+1 , 0));
-  vector<int>prefix(ind+1 , 0);
-  prefix[0] = 0;
-  for(int i=1;i<=ind;i++){
-    prefix[i] = prefix[i-1] + cnt[i-1];
-    for(int j=N;j>=cnt[i];j--)
-    {
-       if(!vis[j] && vis[j-cnt[i]]){
-          vis[j] = 1;from[j][cnt[i]]=1;
-       }
-    }
+  sort(arr.begin() , arr.end());
+  set<int>s;
+  for(int i=0;i<n;i++){
+     auto it = s.upper_bound(arr[i].second);
+     s.insert(arr[i].second);
+     if(it==s.end())continue;
+     s.erase(it);
+//     s.insert(arr[i].second);
   }
-  if(vis[N]==0){
-    cout<<-1<<endl;return;
-  }
-  int p1 = N;
-  vector<int>col(2*N+1 , 0);
-  int curr = N;
-  for(int i=ind;i>=1;i--)
-  {
-     
-     if(from[curr][cnt[i]]){
-        for(int j=prefix[i];j<=(prefix[i] + cnt[i]-1);j++){
-           col[j] = 1;
-        }
-        curr-=cnt[i];
-     }
-     if(curr<=0){
-      break;
-     }
-  }
- 
-  for(int i=0;i<2*N;i++){
-    if(col[i])cout<<arr[i]<<" ";
-  }cout<<endl;
-  for(int i=0;i<2*N;i++){
-     if(col[i]==0)cout<<arr[i]<<" ";
-  }cout<<endl;
+  cout<<s.size()<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }
