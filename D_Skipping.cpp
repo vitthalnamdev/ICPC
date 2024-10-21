@@ -40,50 +40,59 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
-int dfs(int node , int parent , vector<int>adj[] , vector<int>&dist , int curr){
-    dist[node] = curr;
-    for(auto i:adj[node])
-    {
-        if(i==parent){continue;}
-        dfs(i , node , adj , dist , curr+1);
-    }
+set<int>s;
+int shortest_path(int node , vector<int>&brr , vector<int>&arr , vector<ll>&dist)
+{
+   set<pair<ll,int>>now;
+   now.insert({0 , node});
+   dist[node] = 0;
+   s.erase(s.begin());
+   int n = brr.size();
+   vector<int>vis(n-1 , 0);
+    
+   while(!now.empty()) 
+   {
+      auto top = *now.begin();
+      now.erase(now.begin());
+      if(vis[top.second])continue;
+      vis[top.second] = 1;
+      
+      while(!(s.empty()) && *(s.begin())<=top.second){
+         
+         auto curr = *s.begin();
+         s.erase(s.begin());
+         dist[curr] = min(dist[curr] , top.first);
+         now.insert({dist[curr] , curr});
+      }
+      if(dist[brr[top.second]] > top.first + arr[top.second]){
+          
+           dist[brr[top.second]] = top.first + arr[top.second];
+           
+           now.insert({dist[brr[top.second]] , brr[top.second]});
+      }
+   }
+   
 }
 void solve(){
-  ll n;cin>>n;
-  vector<int>adj[n+1];
-  for(int i=1;i<n;i++){
-    int a , b;cin>>a>>b;
-    adj[a].push_back(b);
-    adj[b].push_back(a);
-  }
-  vector<int>dist(n+1 , 0);
-  dfs(1 , -1 , adj , dist , 0);
-  vector<int>dp(n+1 , 0);
-  vector<int>prev(n+1 , 0);
-  for(int i=2;i<=n;i++){
-     dp[dist[i]]++; 
-     if(adj[i].size()==1){
-        prev[dist[i]]+=dist[i];
-     }
-  }
-  for(int i=1;i<=n;i++){
-     prev[i]+=prev[i-1];
-  }
- 
-  vector<int>cnt(n+2,0);
-  for(int i=n;i>=1;i--)
-  {
-    cnt[i]=(cnt[i+1] + dp[i]); 
-  }
-  
-  int result = INT_MAX;
-  for(int i=1;i<=n;i++){
-      if(i==2){
-        cout<<cnt[i+1] + prev[i-1]<<endl;
-      }
-      result = min(result , cnt[i+1] + prev[i-1]);
-  }
-  cout<<result<<endl;
+  s.clear();
+ int n;cin>>n;
+ for(int i=1;i<=n;i++){
+  s.insert(i);
+ }
+ vector<int>arr(n+1);
+ for(int i=1;i<=n;i++)cin>>arr[i];
+ vector<int>brr(n+1);
+ for(int i=1;i<=n;i++)cin>>brr[i];
+ vector<ll>dist(n+1,LLONG_MAX);
+ shortest_path(1 ,  brr , arr , dist);
+ ll prev = 0;ll result = 0;
+ for(int i=1;i<=n;i++){
+   prev+=arr[i];
+   if(dist[i]!=LLONG_MAX)
+   result = max(result , prev - dist[i]);
+ }
+   
+ cout<<result<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

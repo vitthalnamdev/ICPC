@@ -62,7 +62,7 @@ void solve(){
  };
  int cnt = 0;
  for(int i=1;i<n;i++){
-   cnt+=(problem(i)  );
+   cnt+=(problem(i));
  }
   
  while(q--)

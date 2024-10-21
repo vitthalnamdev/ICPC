@@ -40,50 +40,21 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
-int dfs(int node , int parent , vector<int>adj[] , vector<int>&dist , int curr){
-    dist[node] = curr;
-    for(auto i:adj[node])
-    {
-        if(i==parent){continue;}
-        dfs(i , node , adj , dist , curr+1);
-    }
-}
 void solve(){
-  ll n;cin>>n;
-  vector<int>adj[n+1];
-  for(int i=1;i<n;i++){
-    int a , b;cin>>a>>b;
-    adj[a].push_back(b);
-    adj[b].push_back(a);
-  }
-  vector<int>dist(n+1 , 0);
-  dfs(1 , -1 , adj , dist , 0);
-  vector<int>dp(n+1 , 0);
-  vector<int>prev(n+1 , 0);
-  for(int i=2;i<=n;i++){
-     dp[dist[i]]++; 
-     if(adj[i].size()==1){
-        prev[dist[i]]+=dist[i];
-     }
-  }
-  for(int i=1;i<=n;i++){
-     prev[i]+=prev[i-1];
-  }
- 
-  vector<int>cnt(n+2,0);
-  for(int i=n;i>=1;i--)
-  {
-    cnt[i]=(cnt[i+1] + dp[i]); 
-  }
-  
-  int result = INT_MAX;
-  for(int i=1;i<=n;i++){
-      if(i==2){
-        cout<<cnt[i+1] + prev[i-1]<<endl;
-      }
-      result = min(result , cnt[i+1] + prev[i-1]);
-  }
-  cout<<result<<endl;
+ int n;cin>>n;
+ vector<pair<int,int>>arr(n);
+ for(int i=0;i<n;i++){
+    cin>>arr[i].first>>arr[i].second;
+ }
+ sort(arr.begin() , arr.end() , [&](pair<int,int>&a , pair<int,int>&b){
+    if(max(a.first , a.second)==max(b.first , b.second)){
+       return min(a.first , a.second)<min(b.first , b.second);
+    }
+     return max(a.first , a.second)<max(b.first , b.second);
+ });
+for(int i=0;i<n;i++){
+    cout<<arr[i].first<<" "<<arr[i].second<<" ";
+}cout<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
