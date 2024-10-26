@@ -40,50 +40,47 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
+
 void solve(){
- int n , m;cin>>n>>m;
- vector<int>arr(n+m+1);
- vector<int>brr(n+m+1);
- for(int i=0;i<n+m+1;i++)cin>>arr[i];
- for(int i=0;i<n+m+1;i++)cin>>brr[i];
- set<int>programmers,testers;
- ll ans = 0;
- for(int i=0;i<n+m;i++){
-    if(arr[i]>brr[i] && programmers.size()<n){
-        programmers.insert(i);
-        ans+=arr[i];
-    }else if(testers.size()<m){
-        testers.insert(i);
-        ans+=brr[i];
+ int n;cin>>n;
+ vector<int>arr(n);
+ for(int i=0;i<n;i++)cin>>arr[i];
+ 
+ ll ans  = 0;
+ ll prev = -1;
+ int check = 0;
+ vector<int>pref(n , 0);
+ map<int,int>cnt;
+ map<ll,ll>f;
+ int val = 0;
+//  for(int i=0;i<n;i++){
+//     if(val==2)val++;
+//     if(arr[i]==3){
+//         pref[i] = (i-1>=0?pref[i-1]:0) - 1;
+//     }else if(arr[i]==1){
+//         pref[i] = (i-1>=0?pref[i-1]:0) + 1;
+//     }else{
+//         pref[i] = (i-1>=0?pref[i-1]:0);
+//     }
+//  }
+//  debug(pref)
+ val = 0;
+ prev = 0;
+ int three = 0;
+ int one = 0;
+ int two = 0;
+ for(int i=0;i<n;i++){
+    if(arr[i]!=val){
+      val = arr[i];
+      prev = 1;
     }else{
-        programmers.insert(i);
-        ans+=arr[i];
+        prev++;
     }
- }
- int pind=-1;int tind = -1;
- for(int i=n+m;i>=0;i--){
-    auto p = programmers.end();
-    auto t = testers.end();
-    
-     if(programmers.size()>=1 && arr[i]>brr[i] && i>*(--p)){
-        pind = i;
-     }
-     if(testers.size()>=1 && brr[i]>arr[i] && i>*(--t)){
-        tind = i;
-     }
+    ans+=prev;
+     
  }
   
- for(int i=0;i<n+m;i++){
-    auto f = programmers.find(i);
-    ll curr;
-    if(f!=programmers.end()){
-        curr = ans - arr[i] + (pind==-1?arr[n+m]:arr[pind] - brr[pind] + brr[n+m]);
-    }else{
-        curr = ans - brr[i] + (tind==-1?brr[n+m]:brr[tind] - arr[tind] + arr[n+m]);
-    }
-    cout<<curr<<" ";
- }
- cout<<ans<<endl;
+ 
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

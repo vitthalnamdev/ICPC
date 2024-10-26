@@ -41,49 +41,20 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
- int n , m;cin>>n>>m;
- vector<int>arr(n+m+1);
- vector<int>brr(n+m+1);
- for(int i=0;i<n+m+1;i++)cin>>arr[i];
- for(int i=0;i<n+m+1;i++)cin>>brr[i];
- set<int>programmers,testers;
- ll ans = 0;
- for(int i=0;i<n+m;i++){
-    if(arr[i]>brr[i] && programmers.size()<n){
-        programmers.insert(i);
-        ans+=arr[i];
-    }else if(testers.size()<m){
-        testers.insert(i);
-        ans+=brr[i];
-    }else{
-        programmers.insert(i);
-        ans+=arr[i];
-    }
+ int n;cin>>n;
+ string s;cin>>s;
+ sort(s.begin() , s.end());
+ int cnt = 0;
+ for(int i=0;i<n;i++){
+    if(s[i]=='1')cnt++;
  }
- int pind=-1;int tind = -1;
- for(int i=n+m;i>=0;i--){
-    auto p = programmers.end();
-    auto t = testers.end();
-    
-     if(programmers.size()>=1 && arr[i]>brr[i] && i>*(--p)){
-        pind = i;
-     }
-     if(testers.size()>=1 && brr[i]>arr[i] && i>*(--t)){
-        tind = i;
-     }
+ if(s[0]=='0' && s[n-1]=='0'){
+    cout<<n<<endl;return;
  }
-  
- for(int i=0;i<n+m;i++){
-    auto f = programmers.find(i);
-    ll curr;
-    if(f!=programmers.end()){
-        curr = ans - arr[i] + (pind==-1?arr[n+m]:arr[pind] - brr[pind] + brr[n+m]);
-    }else{
-        curr = ans - brr[i] + (tind==-1?brr[n+m]:brr[tind] - arr[tind] + arr[n+m]);
-    }
-    cout<<curr<<" ";
+ if(cnt%2==0){
+    cout<<"0"<<endl;return;
  }
- cout<<ans<<endl;
+ cout<<1<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

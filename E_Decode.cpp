@@ -41,47 +41,21 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
- int n , m;cin>>n>>m;
- vector<int>arr(n+m+1);
- vector<int>brr(n+m+1);
- for(int i=0;i<n+m+1;i++)cin>>arr[i];
- for(int i=0;i<n+m+1;i++)cin>>brr[i];
- set<int>programmers,testers;
+ string s;cin>>s;
+ int n = s.length();
+ vector<int>pref(n+1,0);
+ for(int i=0;i<n;i++){
+    pref[i+1] = pref[i] +  (s[i]=='0'?1:-1);
+ }
+   
+ map<ll,ll>val;
  ll ans = 0;
- for(int i=0;i<n+m;i++){
-    if(arr[i]>brr[i] && programmers.size()<n){
-        programmers.insert(i);
-        ans+=arr[i];
-    }else if(testers.size()<m){
-        testers.insert(i);
-        ans+=brr[i];
-    }else{
-        programmers.insert(i);
-        ans+=arr[i];
-    }
- }
- int pind=-1;int tind = -1;
- for(int i=n+m;i>=0;i--){
-    auto p = programmers.end();
-    auto t = testers.end();
-    
-     if(programmers.size()>=1 && arr[i]>brr[i] && i>*(--p)){
-        pind = i;
-     }
-     if(testers.size()>=1 && brr[i]>arr[i] && i>*(--t)){
-        tind = i;
-     }
- }
-  
- for(int i=0;i<n+m;i++){
-    auto f = programmers.find(i);
-    ll curr;
-    if(f!=programmers.end()){
-        curr = ans - arr[i] + (pind==-1?arr[n+m]:arr[pind] - brr[pind] + brr[n+m]);
-    }else{
-        curr = ans - brr[i] + (tind==-1?brr[n+m]:brr[tind] - arr[tind] + arr[n+m]);
-    }
-    cout<<curr<<" ";
+ for(int i=0;i<=n;i++){
+   ans+=((val[pref[i]]))*(n-i+1);
+   if(i==1){
+    cout<<ans<<endl;
+   }  
+   val[pref[i]]+=(i+1);
  }
  cout<<ans<<endl;
 }

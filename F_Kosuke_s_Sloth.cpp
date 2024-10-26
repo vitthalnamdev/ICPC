@@ -36,57 +36,45 @@ b >>= 1;
 }
 return res;
 }
+ll gcd(ll a, ll b) {
+    if (!a || !b)
+        return a | b;
+    unsigned shift = __builtin_ctz(a | b);
+    a >>= __builtin_ctz(a);
+    do {
+        b >>= __builtin_ctz(b);
+        if (a > b)
+            swap(a, b);
+        b -= a;
+    } while (b);
+    return a << shift;
+}
 #define cntone(x) __builtin_popcountll(x)
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
+ 
 void solve(){
- int n , m;cin>>n>>m;
- vector<int>arr(n+m+1);
- vector<int>brr(n+m+1);
- for(int i=0;i<n+m+1;i++)cin>>arr[i];
- for(int i=0;i<n+m+1;i++)cin>>brr[i];
- set<int>programmers,testers;
- ll ans = 0;
- for(int i=0;i<n+m;i++){
-    if(arr[i]>brr[i] && programmers.size()<n){
-        programmers.insert(i);
-        ans+=arr[i];
-    }else if(testers.size()<m){
-        testers.insert(i);
-        ans+=brr[i];
-    }else{
-        programmers.insert(i);
-        ans+=arr[i];
-    }
- }
- int pind=-1;int tind = -1;
- for(int i=n+m;i>=0;i--){
-    auto p = programmers.end();
-    auto t = testers.end();
-    
-     if(programmers.size()>=1 && arr[i]>brr[i] && i>*(--p)){
-        pind = i;
-     }
-     if(testers.size()>=1 && brr[i]>arr[i] && i>*(--t)){
-        tind = i;
-     }
- }
-  
- for(int i=0;i<n+m;i++){
-    auto f = programmers.find(i);
-    ll curr;
-    if(f!=programmers.end()){
-        curr = ans - arr[i] + (pind==-1?arr[n+m]:arr[pind] - brr[pind] + brr[n+m]);
-    }else{
-        curr = ans - brr[i] + (tind==-1?brr[n+m]:brr[tind] - arr[tind] + arr[n+m]);
-    }
-    cout<<curr<<" ";
- }
- cout<<ans<<endl;
+  ll n , k;cin>>n>>k;
+  if(k==1){
+    cout<<n%mod<<endl;return;
+  } 
+  int ans = __gcd(4 , 5);
+  ll curr = 1;
+  ll prev = 1;
+  ll ind = 2;
+  while(curr!=0){
+    ll now = (prev + curr)%k;
+    prev = curr;
+    curr = now;
+    ind++;
+  }
+  n%=mod;
+  cout<<(ind*n)%mod<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
+  
 int t;cin>>t;
 while(t--){
 solve();

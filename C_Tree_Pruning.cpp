@@ -40,12 +40,14 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
-int dfs(int node , int parent , vector<int>adj[] , vector<int>&dist , int curr){
+int dfs(int node , int parent , vector<int>adj[] , vector<int>&dist , vector<int>&mx ,  int curr){
     dist[node] = curr;
+    mx[node] = curr;
     for(auto i:adj[node])
     {
         if(i==parent){continue;}
-        dfs(i , node , adj , dist , curr+1);
+        dfs(i , node , adj , dist ,mx , curr+1);
+        mx[node] = max(mx[i] , mx[node]);
     }
 }
 void solve(){
@@ -57,14 +59,15 @@ void solve(){
     adj[b].push_back(a);
   }
   vector<int>dist(n+1 , 0);
-  dfs(1 , -1 , adj , dist , 0);
+  vector<int>mx(n+1 , 0);
+  dfs(1 , -1 , adj , dist , mx , 0);
   vector<int>dp(n+1 , 0);
   vector<int>prev(n+1 , 0);
+
   for(int i=2;i<=n;i++){
-     dp[dist[i]]++; 
-     if(adj[i].size()==1){
-        prev[dist[i]]+=dist[i];
-     }
+     dp[dist[i]]++;
+     if(mx[i]!=0) 
+     prev[mx[i]]++;
   }
   for(int i=1;i<=n;i++){
      prev[i]+=prev[i-1];
@@ -75,12 +78,9 @@ void solve(){
   {
     cnt[i]=(cnt[i+1] + dp[i]); 
   }
-  
+   
   int result = INT_MAX;
   for(int i=1;i<=n;i++){
-      if(i==2){
-        cout<<cnt[i+1] + prev[i-1]<<endl;
-      }
       result = min(result , cnt[i+1] + prev[i-1]);
   }
   cout<<result<<endl;

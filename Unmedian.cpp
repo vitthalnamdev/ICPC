@@ -41,49 +41,37 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
- int n , m;cin>>n>>m;
- vector<int>arr(n+m+1);
- vector<int>brr(n+m+1);
- for(int i=0;i<n+m+1;i++)cin>>arr[i];
- for(int i=0;i<n+m+1;i++)cin>>brr[i];
- set<int>programmers,testers;
- ll ans = 0;
- for(int i=0;i<n+m;i++){
-    if(arr[i]>brr[i] && programmers.size()<n){
-        programmers.insert(i);
-        ans+=arr[i];
-    }else if(testers.size()<m){
-        testers.insert(i);
-        ans+=brr[i];
-    }else{
-        programmers.insert(i);
-        ans+=arr[i];
+ int n;cin>>n;
+ vector<int>arr(n);
+ for(int i=0;i<n;i++)cin>>arr[i];
+ vector<pair<int,int>>ans;
+ int prev = 0;
+ int cnt = 0;
+ while(arr.size()>=3){
+    cnt++;
+    vector<pair<int,int>>temp;
+    for(int j=0;j<3;j++){
+        temp.push_back({arr[j] , j});
     }
- }
- int pind=-1;int tind = -1;
- for(int i=n+m;i>=0;i--){
-    auto p = programmers.end();
-    auto t = testers.end();
-    
-     if(programmers.size()>=1 && arr[i]>brr[i] && i>*(--p)){
-        pind = i;
-     }
-     if(testers.size()>=1 && brr[i]>arr[i] && i>*(--t)){
-        tind = i;
-     }
- }
-  
- for(int i=0;i<n+m;i++){
-    auto f = programmers.find(i);
-    ll curr;
-    if(f!=programmers.end()){
-        curr = ans - arr[i] + (pind==-1?arr[n+m]:arr[pind] - brr[pind] + brr[n+m]);
-    }else{
-        curr = ans - brr[i] + (tind==-1?brr[n+m]:brr[tind] - arr[tind] + arr[n+m]);
+    sort(temp.begin() , temp.end());
+    vector<int>brr;
+    int f = temp[1].second;
+    if(temp[0].first==temp[1].first){
+        f = temp[0].second;
     }
-    cout<<curr<<" ";
+    for(int j=0;j<arr.size();j++){
+        if(j==f){continue;}
+        brr.push_back(arr[j]);
+    }
+    arr = brr;
  }
- cout<<ans<<endl;
+ if(arr[0]>arr[1]){
+    cout<<-1<<endl;return;
+ }
+ cout<<cnt<<endl;
+ for(int i=1;i<=cnt;i++){
+    cout<<1<<" "<<3<<endl;
+ }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
