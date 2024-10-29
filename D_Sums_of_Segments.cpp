@@ -41,9 +41,45 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
- int n;cin>>n;
- if(n>10)
- for(int j=0;j<10;j++)cout<<"HELLO";
+ ll n;cin>>n;
+ vector<ll>arr(n);
+ for(int i=0;i<n;i++)cin>>arr[i];
+ 
+ int q;cin>>q;
+ vector<ll>sum;
+ ll prev = 0;
+ for(int i=0;i<n;i++){
+   prev+=(n-i);
+   sum.push_back(prev);
+ }
+ map<ll,ll>cnt;
+ for(int i=0;i<n;i++){
+    cnt[arr[i]]++;
+ }
+ vector<int>pref(n);
+ for(int i=0;i<n;i++){
+    ll ans = 0;
+    for(auto j:cnt){
+       ans+=(j.first*j.second);
+    }
+    cnt[arr[i]]--;
+    pref[i] = ans;
+ }
+ debug(pref)
+ for(int i=1;i<n;i++){
+   pref[i]+=pref[i-1];
+ }
+  debug(pref) 
+ while(q--)
+ {
+   ll l , r;cin>>l>>r; 
+   int indstart = lower_bound(sum.begin() , sum.end() , l) - sum.begin();
+   int indend = lower_bound(sum.begin() , sum.end() , r) - sum.begin();
+   ll sum = (indend - 1>=0?pref[indend - 1]:0) - pref[indstart];
+
+
+ }
+ 
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

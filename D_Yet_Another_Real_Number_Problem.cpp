@@ -42,12 +42,32 @@ return res;
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
  int n;cin>>n;
- if(n>10)
- for(int j=0;j<10;j++)cout<<"HELLO";
+ vector<ll>arr(n);
+ for(int i=0;i<n;i++)cin>>arr[i];
+ stack<pair<ll,ll>>st;
+ ll sum = 0;
+ for(int i=0;i<n;i++){
+   ll cnt = 0;
+   while(arr[i]%2==0){arr[i]/=2;cnt++;}
+   while(st.size()>0 && (cnt>31 ||  st.top().first<=(arr[i]<<cnt))){
+      auto tp = st.top();
+      sum-=((tp.first*binpow(2 , tp.second , mod))%mod);
+      sum = (sum + mod)%mod;
+      (sum+=tp.first)%=mod;
+      st.pop();
+      cnt+=(tp.second);
+   }
+  st.push({arr[i] , cnt});
+  sum+=(arr[i]*binpow(2 , cnt , mod));
+   
+  sum%=mod;
+  cout<<sum<<" ";
+ }
+cout<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

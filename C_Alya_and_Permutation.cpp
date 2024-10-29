@@ -41,13 +41,50 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
- int n;cin>>n;
- if(n>10)
- for(int j=0;j<10;j++)cout<<"HELLO";
+  int n;cin>>n;
+  if(n%2){
+     cout<<n<<endl;
+     cout<<2<<" "<<1<<" ";
+     for(int i=3;i<=n;i++)cout<<i<<" ";cout<<endl;
+  }else{
+    int num1 = 0; int  num2 = 0;
+    int on = 0;
+    int ans = -1;
+    for(int i=30;i>=0;i--)
+    {
+        if((1<<i)&n){on = 1;}
+        else if(on){
+          num1|=(1<<i);
+        }
+        if(on && ans==-1){
+          ans = (1<<(i+1))-1;
+        }
+    }
+    for(int i=1;i<=n-1;i++){
+       if(i==num1)continue;
+       if((i&num1)==num1){
+         num2 = i;break;
+       }
+    }
+    if(num2==0){
+      cout<<ans<<endl;
+      cout<<2<<" "<<1<<" ";
+      for(int i=3;i<=n;i++)cout<<i<<" ";cout<<endl;return;
+    }
+    cout<<ans<<endl;
+    for(int i=1;i<=n;i++){
+       if(i==num1 || i==num2 || i==n){
+        continue;
+       }
+       cout<<i<<" ";
+    }
+    cout<<num2<<" "<<num1<<" "<<n<<endl;
+  }
+
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

@@ -40,10 +40,82 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
+class matrix{
+ public:
+ vector<vector<ll>>arr;
+ matrix(){
+    arr.resize(2 , vector<ll>(2 , 0));
+ } 
+};
+
+matrix product(matrix &a , matrix &b){
+  matrix ans;
+  for(int i=0;i<2;i++)
+  {
+     for(int j=0;j<2;j++){
+        for(int k=0;k<2;k++)
+           (ans.arr[i][j]+=((a.arr[i][k])*(b.arr[k][j])))%=mod;  
+     }
+  }  
+  return ans;
+}
+class segment{
+  public:
+  vector<matrix>tree;
+  int n ;
+  segment(ll n){
+     this->n = n;
+     tree.resize(4*n+4);
+  }
+  matrix build(vector<matrix>&arr , int l , int r , int ind)
+  {
+     if(l==r){return tree[ind] = arr[l];}
+     int mid = (l+r)/2;
+     matrix  left = build(arr , l , mid , 2*ind+1);
+     matrix right = build(arr , mid+1 , r , 2*ind+2);
+     return tree[ind] = product(left , right);
+  }
+  matrix query(int l , int r , int a , int b , int ind)
+  { 
+    if(l>b || r<a){
+      matrix now;now.arr[0][0] = 1;now.arr[1][1] = 1;
+      return now;
+    } 
+    if(l>=a && r<=b){return tree[ind];}
+    int mid = (l+r)/2;
+    matrix left = query(l , mid , a , b , 2*ind+1);
+    matrix right = query(mid +1 , r , a , b , 2*ind+2);
+    return product(left , right);
+  }
+};
+
+
+
 void solve(){
- int n;cin>>n;
- if(n>10)
- for(int j=0;j<10;j++)cout<<"HELLO";
+ int n , m;cin>>mod>>n>>m;
+ vector<matrix>a(n);
+ for(int i=0;i<n;i++){
+    for(int j=0;j<2;j++){
+        for(int k=0;k<2;k++){
+            cin>>a[i].arr[j][k];
+        }
+    }
+ }
+  segment t(n+1);
+  t.build(a , 0 , n-1 , 0);
+ 
+  while(m--)
+  {
+    int l , r;cin>>l>>r;
+    l--;r--;
+    matrix ans = t.query(0 , n-1 , l , r , 0);
+    for(int i=0;i<2;i++){
+        for(int j=0;j<2;j++){
+            cout<<(ans.arr[i][j])<<" ";
+        }cout<<endl;
+    }cout<<endl;
+  }
+
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

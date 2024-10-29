@@ -40,14 +40,43 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
+ll cal(vector<ll>&arr){
+    int n = arr.size();
+    ll ans = 0;
+  for(int i=1;i<n;i+=2){
+     ans = max(ans , arr[i] - arr[i-1]);
+  }return ans;
+}
 void solve(){
- int n;cin>>n;
- if(n>10)
- for(int j=0;j<10;j++)cout<<"HELLO";
+int n;cin>>n;
+vector<ll>arr(n);
+for(int i=0;i<n;i++)cin>>arr[i];
+if(n==1){
+    cout<<1<<endl;return;
+}
+if(n%2==0){
+    cout<<cal(arr)<<endl;return;
+}
+ll ans = 1;
+for(int i=1;i<n;i++){
+    ans = max(ans , arr[i] - arr[i-1]);
+}
+for(int i=0;i<n;i++){
+     
+    vector<ll>newarr;
+    for(int j=0;j<n;j++){
+        if(i==j){
+            continue;
+        }
+        newarr.push_back(arr[j]);
+    }
+     ans = min(ans , cal(newarr));
+}
+cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

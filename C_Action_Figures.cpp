@@ -41,13 +41,34 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
- int n;cin>>n;
- if(n>10)
- for(int j=0;j<10;j++)cout<<"HELLO";
+ 
+  int n;cin>>n;
+  string s;cin>>s;
+  ll ans = 0;
+  int cnt = 0;
+  for(int i=n-1;i>=0;i--)
+  {
+     if(s[i]=='1'){cnt = max(cnt , 0);cnt++;continue;}
+     else{
+       ans+=(i+1);cnt--;
+     }
+  }
+  cnt = cnt/2 + cnt%2;
+ 
+  for(int i=0;i<n;i++){
+     if(s[i]=='1'){
+        cnt--;
+     }
+     if(s[i]=='1'){ans+=(i+1);}
+     if(cnt<=0){
+        break;
+     }
+  }
+  cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }
