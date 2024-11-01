@@ -40,29 +40,40 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
+// template<class T> ll cal(vector<T>&a , int la , int lb , int rl , int rr , int n );
+
 class segment{
+  public:
   vector<ll>tree;
   int n ;
-  public:
   segment(ll n){
      this->n = n;
      tree.assign(4*n+4 , 0);
   }
+    ll cal(vector<segment>&a , vector<segment>&count , int la , int lb , int rl , int rr , int n ){
+        ll ans = 0;
+        for(int i=1;i<=40;i++){
+        ll cnti = count[i].query(0 , n-1 , rl , rr , 0);
+         // for(int j=i+1;j<=40;j++)
+           ans+=(cnti*a[i].query(0 , n-1 , la , lb , 0));
+        }
+        return ans;
+    }
   ll build(vector<ll>&arr , int l , int r , int ind)
   {
      if(l==r){return tree[ind] = arr[l];}
      int mid = (l+r)/2;
-     ll left = build(arr , l , mid , 2*ind+1);
-     ll right = build(arr , mid+1 , r , 2*ind+2);
-     return tree[ind] = (left+right);
+     int left = build(arr , l , mid , 2*ind+1);
+     int right = build(arr , mid+1 , r , 2*ind+2);
+     return tree[ind] = (left + right);
   }
   ll query(int l , int r , int a , int b , int ind)
   { 
     if(l>b || r<a){return 0;} 
     if(l>=a && r<=b){return tree[ind];}
     int mid = (l+r)/2;
-    ll left = query(l , mid , a , b , 2*ind+1);
-    ll right = query(mid +1 , r , a , b , 2*ind+2);
+    int left = query(l , mid , a , b , 2*ind+1);
+    int right = query(mid +1 , r , a , b , 2*ind+2);
     return (left + right);
   }
   ll update(int l ,int r , int i , int ind , int val)
@@ -72,82 +83,98 @@ class segment{
          return tree[ind] = val;
       }
       int mid = (l+r)/2;
-      ll left = update(l , mid , i , 2*ind+1 , val);
-      ll right = update(mid+1 ,r , i , 2*ind+2 , val);
-      return tree[ind] = (left + right);
+      int left = update(l , mid , i , 2*ind+1 , val);
+      int right = update(mid+1 ,r , i , 2*ind+2 , val);
+      return tree[ind] =  (left + right);
+  }
+
+  ll build(vector<ll>&arr , int l , int r , int ind , vector<segment>&a ,vector<segment>&count , int N)
+  {
+     if(l==r){return tree[ind] = 0;}
+     int mid = (l+r)/2;
+    
+     ll left = build(arr , l , mid , 2*ind+1 , a , count , N);
+     ll right = build(arr , mid+1 , r , 2*ind+2 , a , count , N);
+     return tree[ind] = left + right + cal(a , count ,  l , mid , mid+1 , r , N);
+  }
+
+  ll query(int l , int r , int a , int b , int ind , vector<segment>&arr ,vector<segment>&count , int N )
+  { 
+    if(l>b || r<a){return LLONG_MAX;} 
+    if(l>=a && r<=b){return tree[ind];}
+    int mid = (l+r)/2;
+    ll left = query(l , mid , a , b , 2*ind+1 , arr , count ,  N);
+    ll right = query(mid +1 , r , a , b , 2*ind+2 , arr , count , N);
+    if(right==LLONG_MAX){
+        return left;
+    }else if(left==LLONG_MAX){
+        return right;   
+    }
+    return left + right + cal(arr , count , max(a , l) , mid , mid+1 ,min( r  , b), N);
+  }
+  ll update(int l ,int r , int i , int ind , vector<segment>&arr ,vector<segment>&count ,  int N)
+  {
+      if(l>i || r<i){return tree[ind];}
+      if(l==r && l==i){
+         return tree[ind] = 0;
+      }
+      int mid = (l+r)/2;
+      ll left = update(l , mid , i , 2*ind+1 , arr , count , N);
+      ll right = update(mid+1 ,r , i , 2*ind+2 , arr ,count ,  N);    
+      tree[ind] =  (left + right + cal(arr , count , l , mid , mid +1 , r ,  N));
+      return tree[ind];
   }
 };
 
+ 
+
+
+
+
 void solve(){
-    int n;cin>>n;
-    int q;cin>>q;
-    vector<ll>arr(n);
-    for(int i=0;i<n;i++)cin>>arr[i];
-    vector<ll>pref(n+1 , 0);
-    vector<segment>t(41 , segment(n+1));
-     
-    for(int i=1;i<=40;i++){
-        vector<ll>brr;
-        for(int j=0;j<n;j++){if(arr[j]==i)brr.push_back(1);else brr.push_back(0);}
-        t[i].build(brr , 0 , n-1 , 0);
-    }
-
-    for(int i=0;i<n;i++){
-        if(i>0)
-        for(int j=arr[i] + 1;j<=40;j++){
-             pref[i]+=(t[j].query(0 , n-1 , 0 , i-1 , 0));
+  int n , q;cin>>n>>q;
+  vector<ll>arr(n);
+  for(int i=0;i<n;i++)cin>>arr[i];
+  vector<segment>t(41 , segment(n+1));
+  vector<segment>count(41 , segment(n+1));
+  for(int i=1;i<=40;i++){
+    vector<ll>temp;vector<ll>cnt;
+     for(int j=0;j<n;j++){
+        if(arr[j]>i){temp.push_back(1);}
+        else temp.push_back(0);
+        if(arr[j]==i){
+         cnt.push_back(1);
+        }else cnt.push_back(0);
+     }
+      
+     t[i].build(temp , 0 , n-1 , 0);
+     count[i].build(cnt , 0 ,n-1 , 0);
+  }
+ 
+  segment a(n+1);
+  a.build(arr , 0 ,n-1 , 0 , t , count , n);
+  
+ 
+  while(q--)
+  {
+     int type;cin>>type;
+     if(type==1)
+     {
+        int l , r;cin>>l>>r;
+        l--;r--;
+        cout<<a.query(0 , n-1 , l , r , 0 , t , count ,  n)<<endl;  
+        
+     }else{
+        ll l , val;cin>>l>>val;l--;
+        for(int i = min(arr[l] , val);i<max(arr[l] , val);i++){
+            t[i].update(0 , n-1 , l , 0 , arr[l]<val); 
         }
-        if(i<n-1)
-        for(int j=arr[i] - 1;j>=1;j--)
-        {
-            pref[i]+=(t[j].query(0 , n-1 , i+1 , n-1 , 0));
-        }
-    }
-    segment prefix(n+1);
-    prefix.build(pref , 0 , n-1 , 0);
-    auto cal = [&](int l , int r , int value)->long long int {
-         ll currvalue = 0;
-            if(l-1>=0)
-            for(int i=value+1;i<=40;i++){
-               currvalue+=(t[i].query(0 , n-1 , 0 , l-1 , 0));
-            }
-            if(r+1<n)
-            for(int i=value-1;i>=1;i--) 
-            {
-                currvalue+=(t[i].query(0 , n-1 , r+1 , n-1 , 0));
-            }
-            return currvalue;
-    };
-
-    segment newprefix(n+1);
-    vector<ll>brr(n+1 , 0);
-    newprefix.build(brr , 0 , n-1 , 0);
-    // cout<<prefix.query(0 , n-1 , 1, 4 ,0)<<endl; 
-    while(q--)
-    {
-         int type;cin>>type;
-         if(type==1){
-            int l , r;cin>>l>>r;
-            l--;r--;
-            ll total = 0;
-            ll ans = prefix.query(0 , n-1 , l , r , 0) + newprefix.query(0 , n-1 , l , r , 0);
-            for(int i=1;i<=40;i++){
-                ll cnti = t[i].query(0 , n-1 , l , r , 0);
-                ll currvalue = cal(l , r , i);
-                total+=(cnti*currvalue);
-            }
-            cout<<ans - total <<endl;
-         }else{
-            int l , r;cin>>l>>r;
-            l--;
-            t[arr[l]].update(0 , n-1 , l , 0 , 0);
-            t[r].update(0 , n-1 , l , 0 , 1);
-            ll currvalue = cal(l , l , r);
-            prefix.update(0 , n-1 , l , 0 , 0);
-            newprefix.update(0 , n-1 , l , 0 , currvalue);
-         }
-    }
-
+        count[arr[l]].update(0 , n-1 , l , 0 , 0);
+        arr[l] = val;
+        count[arr[l]].update(0 , n-1 , l , 0 , 1);
+        a.update(0 , n-1 , l , 0 , t , count ,  n);
+     }
+  }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

@@ -44,57 +44,56 @@ void solve(){
   int n , m , sx , sy , ex , ey;
   string direction;
   cin>>n>>m>>sx>>sy>>ex>>ey>>direction;
+  if(sx==ex && sy==ey){
+    cout<<0<<endl;return;
+  }
   vector<vector<pair<int,int>>>vis(n+1 , vector<pair<int,int>>(m+1 , { -1 , -1}));
   vector<int>dir = {(direction[0]=='U'?1:0) , (direction[1]=='R'?1:0)};
   auto get_dir = [&](vector<int>curr)->pair<int,int>{
       pair<int,int>ans = {curr[0]==0?1:-1 , curr[1]==0?-1:1};
       return ans;
   };
+
+  auto check = [](int x , int n )->bool{
+      return (x<1 || x>n);
+  };
   auto change_dir = [&](vector<int>curr , int currx , int curry)->vector<int>{       
-      if((currx==1 && curry==1) || (currx==1 && curry==m) || (currx==n && curry==1) || (currx==n && curry==m)){
-         vector<int>ans = {curr[0]^1 , curr[1]^1};
-         return ans;
-      }
-      if(currx==n || currx==1){
-         vector<int>ans = {curr[0]^1 , curr[1]};
-         return ans;
-      }
-          
-      if(curry==m || curry==1){
-         vector<int>ans = {curr[0] , curr[1]^1};
-         return ans;
-      }
-      return curr;
+       auto nxt = get_dir(curr);
+       int nx = currx+nxt.first;int ny = curry+nxt.second;
+       if(check(nx , n) && check(ny , m)){
+          vector<int>ans = {curr[0]^1 , curr[1]^1};
+          return ans; 
+       }else if(check(nx , n )){
+          vector<int>ans = {curr[0]^1 , curr[1]};
+          return ans;
+       }else if(check(ny , m)){
+          vector<int>ans = {curr[0] , curr[1]^1};
+          return ans;
+       }
+       return curr;
   };
   auto bfs = [&]()->int{
       int ans=-1;
       int cnt=0;
       int x = sx , y = sy;    
       while(vis[x][y]!=make_pair(dir[0] , dir[1])){ 
+          if(vis[x][y]==make_pair(-1 , -1))
           vis[x][y] = {dir[0] , dir[1]};
           auto nxt = get_dir(dir);
-          auto newdir = dir;      
           if((x+nxt.first>n) || (x+nxt.first<1) || (y+nxt.second>m) || (y+nxt.second<1)){
-            newdir = change_dir(dir , x , y);
-          }
-          if(dir!=newdir){cnt++;dir = newdir;}
-          nxt = get_dir(dir);
-          x+=nxt.first;y+=nxt.second;    
+            dir = change_dir(dir , x , y);
+            nxt = get_dir(dir);
+            cnt++;
+          }    
+          x+=nxt.first;y+=nxt.second;
           if(x==ex && y==ey){ans = cnt;break;}
       }
+      
       return ans;
   };
-  auto prevdir = dir;
   int ans = bfs();
- 
-  if(ans!=-1){
-    cout<<ans<<endl;
-    return;
-  }
-  dir = prevdir;
-  dir[0]^=1;dir[1]^=1;
-  ans = bfs();
   cout<<ans<<endl;
+  
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

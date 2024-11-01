@@ -40,41 +40,51 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
-
-ll recursion(vector<ll>&arr , vector<ll>&brr , int i , int j, int n , int m , vector<vector<ll>>&dp){
-    if(i>n){return 0;}
-    if(dp[i][j]!=-1){
-      return dp[i][j];
-    } 
-    ll ans = LLONG_MAX;
-    ll val = arr[i-1] + brr[j];
-    auto it = upper_bound(arr.begin() , arr.end() , val) - arr.begin();
-    if(it==i){return LLONG_MAX;}
-    
-    ll now =  recursion(arr , brr , it , j , n , m , dp);
-    if(now==LLONG_MAX){return LLONG_MAX;}
-    ans = min(ans , m-j + now);
-    
-    if(j+1<=m){
-      ans = min(ans , recursion(arr , brr , i , j+1 , n , m , dp));
+int cnt;
+vector<vector<int>>ans;
+int color = 1;
+void dfs(int node , int parent , vector<int>adj[] , vector<int>&curr , vector<vector<int>>&included , vector<int>&vis){
+    for(auto i:adj[node])
+    {
+        if(i==parent)continue;
+        if((vis[i]==0)  && (vis[node]==0) && (included[i][node]==0)){
+            cnt++;
+            included[i][node] = 1;included[node][i] = 1;
+            curr[i] = color;curr[node] = color;
+            vis[i] = 1;vis[node] = 1;
+            color++;
+        }
+        dfs(i , node , adj , curr ,  included , vis);
     }
-    return dp[i][j] = ans;
 }
 
 void solve(){
- int n;cin>>n;int m;cin>>m;
- vector<ll>arr(n+1) , brr(m+1);
- for(int i=1;i<=n;i++)cin>>arr[i];
- for(int i=1;i<=m;i++)cin>>brr[i];
- for(int i=1;i<=n;i++){
-  arr[i]+=arr[i-1];
- }
- vector<vector<ll>>dp(n+1 , vector<ll>(m+1 , -1));
- ll ans = recursion(arr , brr , 1 , 1 , n , m , dp);
- if(ans==LLONG_MAX){
-  cout<<-1<<endl;
-  return;
- }cout<<ans<<endl;
+  cnt = 0;
+  ans.clear();
+  int n;cin>>n;
+  vector<int>adj[n+1];
+  for(int i=1;i<n;i++){
+    int a , b;cin>>a>>b;
+    adj[a].push_back(b);
+    adj[b].push_back(a);
+  }
+  vector<vector<int>>included(n+1 , vector<int>(n+1 , 0));
+  for(;cnt<n-1;){
+    color = 1;
+    vector<int>curr(n+1 , 0);
+    vector<int>vis(n+1 , 0);
+    dfs(1 , -1 , adj , curr ,  included , vis);
+    for(int j=1;j<=n;j++){
+       if(curr[j]==0)curr[j] = ++color;
+    }
+    ans.push_back(curr);
+  }
+  cout<<ans.size()<<endl;
+  for(int i=0;i<ans.size();i++){
+    for(int j=1;j<=n;j++){
+        cout<<ans[i][j]<<" ";
+    }cout<<endl;
+  }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
