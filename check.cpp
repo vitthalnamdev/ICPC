@@ -40,45 +40,23 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
-
-ll recursion(vector<ll>&arr , vector<ll>&brr , int i , int j, int n , int m , vector<vector<ll>>&dp){
-    if(i>n){return 0;}
-    if(dp[i][j]!=-1){
-      return dp[i][j];
-    } 
-    ll ans = LLONG_MAX;
-    ll val = arr[i-1] + brr[j];
-    auto it = upper_bound(arr.begin() , arr.end() , val) - arr.begin();
-    if(it==i){return LLONG_MAX;}
-    
-    ll now =  recursion(arr , brr , it , j , n , m , dp);
-    if(now==LLONG_MAX){return LLONG_MAX;}
-    ans = min(ans , m-j + now);
-    
-    if(j+1<=m){
-      ans = min(ans , recursion(arr , brr , i , j+1 , n , m , dp));
-    }
-    return dp[i][j] = ans;
+ll f(ll n) {
+    if (n % 4 == 0) return n;
+    if (n % 4 == 1) return 1;
+    if (n % 4 == 2) return n + 1;
+    return 0; 
 }
-
 void solve(){
- int n;cin>>n;int m;cin>>m;
- vector<ll>arr(n+1) , brr(m+1);
- for(int i=1;i<=n;i++)cin>>arr[i];
- for(int i=1;i<=m;i++)cin>>brr[i];
- for(int i=1;i<=n;i++){
-  arr[i]+=arr[i-1];
+  int ans = 0;
+ for(int i=2;i<=20;i+=2){
+      ans^=i;
+      cout<<i<<" "<<ans<<endl;
  }
- vector<vector<ll>>dp(n+1 , vector<ll>(m+1 , -1));
- ll ans = recursion(arr , brr , 1 , 1 , n , m , dp);
- if(ans==LLONG_MAX){
-  cout<<-1<<endl;
-  return;
- }cout<<ans<<endl;
+cout<<ans<<endl;
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 solve();
 }

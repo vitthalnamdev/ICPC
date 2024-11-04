@@ -41,69 +41,41 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
-   ll n;cin>>n;
-   vector<ll>arr(n);
-   for(int i=0;i<n;i++)cin>>arr[i];
-   vector<ll>prefix(n+1);
-   for(int i=0;i<n;i++){
-     prefix[i+1] = arr[i]*(n-i);
-   }
-   for(int i=n-1;i>=1;i--)
-   {
-     prefix[i]+=prefix[i+1];
-   }
-   int q;cin>>q;
-   vector<ll>ind(n+1 , 0);
-   for(int i=1;i<=n;i++){
-     ind[i]=(ind[i-1] + n-i+1);
-   }
-   vector<ll>prefsum(n+1 , 0);
-   for(int i=1;i<=n;i++){
-     prefsum[i] = prefsum[i-1] + prefix[i];
-   }
-   
-   vector<vector<ll>>count(n+1 , vector<ll>(30 , 0));
-   for(int i=1;i<=n;i++){
-     for(int j=-10;j<=10;j++){
-       count[i][j+10] = count[i-1][j+10];
+  int n;cin>>n;
+  vector<int>parent(n,-1);
+  parent[1] = 0;
+  int last = n-1;
+  int i = n-1;
+  for(i=n-1;i>=2;i--)
+  {
+     int now=1;
+     while(last>0 && now==1)
+     {
+        last--;
+        cout<<"? "<<i<<" "<<last<<endl;
+        cout.flush();
+        cin>>now;
      }
-     count[i][arr[i-1] + 10]++;
-   }
-     
-   auto sum = [&](ll i)->long long int{
-      if(i<=0){
-         return 0;
-      }
-      auto index = lower_bound(ind.begin() , ind.end() , i) - ind.begin();
-      if(ind[index]==i){
-        return prefsum[index];
-      } 
-      ll prevsum = prefsum[index];
-      ll leftelements = i - ind[index - 1];
-
-      ll r = leftelements + index ;
-       
-      prevsum-=(prefix[r]);
-      
-       
-      for(int i=-10;i<=10;i++){
-        ll cnt = (r-1>=0?count[r-1][i+10]:0) - (index-1>=0?count[index-1][i+10]:0);
-        prevsum-=((n-leftelements-index+1)*(i)*(cnt));
-      }
-      return prevsum;  
-   };
-
- 
-   while(q--)
-   {
-       ll l , r;cin>>l>>r;
-       cout<<sum(r) - sum(l-1)<<endl;    
-   }
- 
+     if(last<=1){
+        parent[i] = last;
+        break;
+     }
+     parent[i]=last;
+  } 
+  
+  i--;
+  while(i>=1){
+    parent[i--] = 0;
+  }
+  cout<<"! ";
+  for(int i=1;i<n;i++){
+    cout<<parent[i]<<" ";
+  }cout<<endl;
+  cout.flush();
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t=1;
+int t;cin>>t;
 while(t--){
 solve();
 }

@@ -41,65 +41,49 @@ return res;
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
 void solve(){
-   ll n;cin>>n;
-   vector<ll>arr(n);
-   for(int i=0;i<n;i++)cin>>arr[i];
-   vector<ll>prefix(n+1);
-   for(int i=0;i<n;i++){
-     prefix[i+1] = arr[i]*(n-i);
-   }
-   for(int i=n-1;i>=1;i--)
-   {
-     prefix[i]+=prefix[i+1];
-   }
-   int q;cin>>q;
-   vector<ll>ind(n+1 , 0);
-   for(int i=1;i<=n;i++){
-     ind[i]=(ind[i-1] + n-i+1);
-   }
-   vector<ll>prefsum(n+1 , 0);
-   for(int i=1;i<=n;i++){
-     prefsum[i] = prefsum[i-1] + prefix[i];
-   }
-   
-   vector<vector<ll>>count(n+1 , vector<ll>(30 , 0));
-   for(int i=1;i<=n;i++){
-     for(int j=-10;j<=10;j++){
-       count[i][j+10] = count[i-1][j+10];
-     }
-     count[i][arr[i-1] + 10]++;
-   }
+ int n ,m , q;cin>>n>>m>>q;
+ vector<int>arr[m+1];
+ for(int i=1;i<=n;i++)
+ for(int i=1;i<=m;i++){
+    int x;cin>>x;
+    arr[i].push_back(x);
+ }
+ for(int i=1;i<=m;i++){
+    for(int j=1;j<n;j++){
+        arr[i][j]|=arr[i][j-1];
+    }
+ }
+ while(q--)
+ {
      
-   auto sum = [&](ll i)->long long int{
-      if(i<=0){
-         return 0;
-      }
-      auto index = lower_bound(ind.begin() , ind.end() , i) - ind.begin();
-      if(ind[index]==i){
-        return prefsum[index];
-      } 
-      ll prevsum = prefsum[index];
-      ll leftelements = i - ind[index - 1];
-
-      ll r = leftelements + index ;
-       
-      prevsum-=(prefix[r]);
-      
-       
-      for(int i=-10;i<=10;i++){
-        ll cnt = (r-1>=0?count[r-1][i+10]:0) - (index-1>=0?count[index-1][i+10]:0);
-        prevsum-=((n-leftelements-index+1)*(i)*(cnt));
-      }
-      return prevsum;  
-   };
-
- 
-   while(q--)
-   {
-       ll l , r;cin>>l>>r;
-       cout<<sum(r) - sum(l-1)<<endl;    
-   }
- 
+    vector<pair<int,int>>s;
+    int m;cin>>m;
+    int ans = 0;
+    for(int i=0;i<m;i++){
+        int a , b;char sign;
+        cin>>a>>sign>>b;
+        if(sign=='>'){
+           int now = upper_bound(arr[a].begin() ,arr[a].end() , b) - arr[a].begin(); 
+           ans = max(ans , now);
+        }else{
+           s.push_back({a , b});
+        }
+    }
+    if(ans==n){
+       cout<<-1<<endl;continue;
+    }  
+    bool f = 0;
+    for(int i=0;i<s.size();i++){
+        if(arr[s[i].first][ans]>=s[i].second){
+            f=1;break;
+        }
+    }
+    if(f){
+        cout<<-1<<endl;
+    }else{
+        cout<<ans+1<<endl;
+    }
+ }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);

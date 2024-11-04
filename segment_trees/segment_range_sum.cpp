@@ -40,66 +40,74 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
-void solve(){
-   ll n;cin>>n;
-   vector<ll>arr(n);
-   for(int i=0;i<n;i++)cin>>arr[i];
-   vector<ll>prefix(n+1);
-   for(int i=0;i<n;i++){
-     prefix[i+1] = arr[i]*(n-i);
-   }
-   for(int i=n-1;i>=1;i--)
-   {
-     prefix[i]+=prefix[i+1];
-   }
-   int q;cin>>q;
-   vector<ll>ind(n+1 , 0);
-   for(int i=1;i<=n;i++){
-     ind[i]=(ind[i-1] + n-i+1);
-   }
-   vector<ll>prefsum(n+1 , 0);
-   for(int i=1;i<=n;i++){
-     prefsum[i] = prefsum[i-1] + prefix[i];
-   }
-   
-   vector<vector<ll>>count(n+1 , vector<ll>(30 , 0));
-   for(int i=1;i<=n;i++){
-     for(int j=-10;j<=10;j++){
-       count[i][j+10] = count[i-1][j+10];
+int cnt = 0;
+
+pair<ll,ll>maxi(vector<pair<ll,ll>>arr)
+{ 
+   int n = arr.size();
+   pair<ll,ll> ans = {0 , 0};
+  for(int i=0;i<n;i++){
+    if(arr[i].second > ans.second){
+       ans = arr[i];
+    }
+  }
+  return ans;
+}
+
+class segment{
+  vector<pair<ll,ll>>tree;
+  int n ;
+  public:
+  segment(ll n){
+     this->n = n;
+     tree.assign(4*n+4 ,{0 , 0});
+  }
+ 
+  void rangeupdate(int l ,int r , int a , int b , int val , int ind){
+     if(l>b || r<a){return;}
+     if(l>=a && r<=b){
+        tree[ind]= {val , ++cnt};
+        return;
      }
-     count[i][arr[i-1] + 10]++;
-   }
+     if(l==r){
+        tree[ind]= {val , ++cnt};
+        return;
+     }
+     int mid = (l+r)/2;
+     rangeupdate(l , mid , a , b , val , 2*ind + 1);
+     rangeupdate(mid+1 , r , a , b , val , 2*ind + 2);
+  }
+
+  pair<ll,ll> rangequery(int l , int r , int i, int ind){
+     if(l>i || r<i){return {0,0};}
+     if(l==r){
+        return tree[ind];
+     }
+     int mid = (l + r)/2;
      
-   auto sum = [&](ll i)->long long int{
-      if(i<=0){
-         return 0;
-      }
-      auto index = lower_bound(ind.begin() , ind.end() , i) - ind.begin();
-      if(ind[index]==i){
-        return prefsum[index];
-      } 
-      ll prevsum = prefsum[index];
-      ll leftelements = i - ind[index - 1];
+     return maxi({tree[ind] , rangequery(l , mid , i , 2*ind + 1) , rangequery(mid+1 , r , i, 2*ind + 2)});
+  }
 
-      ll r = leftelements + index ;
-       
-      prevsum-=(prefix[r]);
-      
-       
-      for(int i=-10;i<=10;i++){
-        ll cnt = (r-1>=0?count[r-1][i+10]:0) - (index-1>=0?count[index-1][i+10]:0);
-        prevsum-=((n-leftelements-index+1)*(i)*(cnt));
-      }
-      return prevsum;  
-   };
+};
 
+void solve(){
+  int n;cin>>n;int m;cin>>m;
+  
+  segment t(n+1);
  
-   while(q--)
-   {
-       ll l , r;cin>>l>>r;
-       cout<<sum(r) - sum(l-1)<<endl;    
-   }
- 
+  while(m--)
+  {
+    int type;cin>>type;
+    if(type==1){
+        int l , r , v;cin>>l>>r>>v;
+        t.rangeupdate(0 , n-1 , l , r-1 , v , 0);
+    }else{
+        int ind;cin>>ind;
+        auto ans = t.rangequery(0 , n-1 , ind , 0);
+        cout<<ans.first<<endl;
+    }
+  }
+  
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
