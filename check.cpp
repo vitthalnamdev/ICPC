@@ -40,20 +40,17 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
-ll f(ll n) {
-    if (n % 4 == 0) return n;
-    if (n % 4 == 1) return 1;
-    if (n % 4 == 2) return n + 1;
-    return 0; 
-}
+ 
+
+
 void solve(){
   int ans = 0;
- for(int i=2;i<=20;i+=2){
-      ans^=i;
-      cout<<i<<" "<<ans<<endl;
+ for(int i = 6;i<=21;i++){
+  ans^=i;
  }
-cout<<ans<<endl;
-}
+ cout<<ans<<endl;
+} 
+
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
 int t=1;

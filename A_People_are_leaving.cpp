@@ -40,28 +40,60 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
-void solve(){
- int n , m;cin>>n>>m;
- vector<int>arr(n+1) , brr(m+1);
- for(int i=1;i<=n;i++)cin>>arr[i];
- for(int i=1;i<=m;i++)cin>>brr[i];
- int p1 = 1;int p2 = 1;
- ll ans = 0;
- for(int i=1;i<=m;i++){
-    while(p1<=n && brr[i]>arr[p1]){
-      p1++;
-    }
-    p2 = p1;
-    while(p2<=n && brr[i]==arr[p2]){
-      p2++;
-    }
-    int curr = brr[i];
-    
-    while(i<=m && brr[i]==curr){
-      i++;ans+=(p2 - p1);
-    }i--;
+class Dsu{
+  public:
+ Dsu(int x){
+     rank = new int[x+1];
+     parent = new int[x+1];
+     ans = new int[x+1];
+     for(int i = 0;i<=x;i++)rank[i] = 0;
+     for(int i = 0;i<=x;i++)parent[i] = i,ans[i] = i;
  }
- cout<<ans<<endl;
+ int* rank;
+ int*parent;
+ int*ans;
+ int find(int a){
+    if(parent[a]==a)return a;
+    return find(parent[a]);
+ }
+ bool same(int a , int b){
+    return find(a)==find(b);
+ }
+ 
+ int Draw_edge(int a , int n){
+     int parenta = find(a);
+     int now = ans[parenta];
+     int parentb = find(now%n+1);
+     if(rank[parenta]>rank[parentb]){
+        parent[parentb] = parenta;
+        ans[parenta] =  ans[parentb];
+     }else if(rank[parentb]> rank[parenta]){
+        parent[parenta] = parentb;
+     }
+     else{
+        parent[parentb] = parenta;
+        rank[parenta]++;
+        ans[parenta] =  ans[parentb];
+     }
+     return now;
+ }
+ 
+};
+
+
+
+void solve(){
+ int n;cin>>n; 
+ Dsu tree(n+2);
+ vector<int>arr(n);
+ for(int i=0;i<n;i++){
+    cin>>arr[i];
+ }
+ for(int i=0;i<n;i++){
+    int now = tree.Draw_edge(arr[i] , n);
+    cout<<now<<" ";
+ }
+ 
 
 }
 int main(){

@@ -43,27 +43,25 @@ return res;
 
 class segment{
   vector<ll>tree;
-  vector<ll>lazy;
   ll prev = -1;
   int n ;
   public:
   segment(ll n){
-     this->n = n;
-     tree.assign(4*n+4 , prev);
-     lazy.assign(4*n+4 , prev);
+    this->n = n;
+    tree.assign(4*n+4 , prev);
   }
-  
+
   int operation(int a , int ele){
-    if(ele!=-1){return ele;}
-    return a;
+    if(ele==prev){return a;}
+    return ele;
   }
 
   void propagate(int ind , int l , int r ){
      if(l==r){
         return;
      }
-     tree[2*ind + 1] = tree[ind];
-     tree[2*ind + 2] = tree[ind];
+     tree[2*ind + 1] = operation(tree[2*ind+1] ,tree[ind]);
+     tree[2*ind + 2] = operation(tree[2*ind+2] , tree[ind]);
      tree[ind] = prev;
   }
 
@@ -90,20 +88,36 @@ class segment{
      }
      int mid = (l + r)/2;
      ll res = tree[ind];
-     res = operation(res , rangequery(l , mid , i , 2*ind + 1)) ,
-     res = operation(res , rangequery(mid+1 , r , i, 2*ind + 2));
+     res = operation(rangequery(l , mid , i , 2*ind + 1) , res) ,
+     res = operation(rangequery(mid+1 , r , i, 2*ind + 2) , res);
+     return res;
   }
  
 };
 
 
 void solve(){
-
-
+   int n;cin>>n;int m;cin>>m;
+   segment t(n+1);
+   while(m--)
+   {
+     int type;cin>>type;
+     if(type==1){
+        int l , r , val;cin>>l>>r>>val;
+        t.rangeupdate(0 , n-1 , l , r-1 , val , 0);
+     }else{
+        int x;cin>>x;
+        ll ans = t.rangequery(0 , n-1 , x , 0);
+        if(ans==-1){
+            cout<<0<<endl;continue;
+        }
+        cout<<ans<<endl;
+     }
+   }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
-int t;cin>>t;
+int t=1;
 while(t--){
 solve();
 }

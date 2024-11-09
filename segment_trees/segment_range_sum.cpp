@@ -40,74 +40,69 @@ return res;
 #define trailzero(x) __builtin_clzll(x)
 #define trailone(x) __builtin_ctzll(x)
 //flags to use    g++ -std=c++17 -Wshadow -Wall -o check check.cpp -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG -g
-int cnt = 0;
-
-pair<ll,ll>maxi(vector<pair<ll,ll>>arr)
-{ 
-   int n = arr.size();
-   pair<ll,ll> ans = {0 , 0};
-  for(int i=0;i<n;i++){
-    if(arr[i].second > ans.second){
-       ans = arr[i];
-    }
-  }
-  return ans;
-}
-
-class segment{
-  vector<pair<ll,ll>>tree;
-  int n ;
-  public:
-  segment(ll n){
-     this->n = n;
-     tree.assign(4*n+4 ,{0 , 0});
-  }
  
-  void rangeupdate(int l ,int r , int a , int b , int val , int ind){
-     if(l>b || r<a){return;}
-     if(l>=a && r<=b){
-        tree[ind]= {val , ++cnt};
-        return;
+class segment{
+  public:
+  vector<ll>sum;
+  vector<ll>mn;
+  segment(int n){
+     sum.resize(4*n+4 , 0);
+     mn.resize(4*n+4 , 0);
+  }
+
+  ll rangeupdate(int l , int r , int a , int b , int ind , int val){
+      if(l>b || r<a){
+         return mn[ind];
+      }
+      if(l>=a && r<=b){
+         sum[ind]+=val;
+          mn[ind]+=val;
+          return mn[ind];
+      }
+       
+      int mid = (l+r)/2;
+      ll left = rangeupdate(l , mid , a , b , 2*ind + 1 , val);
+      ll right = rangeupdate(mid+1 , r , a , b , 2*ind + 2 , val);
+      return mn[ind] = min(left , right);
+   }
+
+  ll query(int l , int r , int a , int b , int ind){
+     if(l>b || r<a){
+       return LLONG_MAX;
      }
-     if(l==r){
-        tree[ind]= {val , ++cnt};
-        return;
+     if(l>=a && r<=b){
+        return (mn[ind]);
      }
      int mid = (l+r)/2;
-     rangeupdate(l , mid , a , b , val , 2*ind + 1);
-     rangeupdate(mid+1 , r , a , b , val , 2*ind + 2);
-  }
-
-  pair<ll,ll> rangequery(int l , int r , int i, int ind){
-     if(l>i || r<i){return {0,0};}
-     if(l==r){
-        return tree[ind];
+     ll left = query(l , mid , a , b , 2*ind + 1);
+     ll right = query(mid+1 , r , a , b , 2*ind + 2);
+     if(left==LLONG_MAX && right==LLONG_MAX){
+        return sum[ind];
      }
-     int mid = (l + r)/2;
-     
-     return maxi({tree[ind] , rangequery(l , mid , i , 2*ind + 1) , rangequery(mid+1 , r , i, 2*ind + 2)});
+     return sum[ind] + min(left , right);
   }
-
 };
 
+ 
 void solve(){
   int n;cin>>n;int m;cin>>m;
-  
   segment t(n+1);
- 
-  while(m--)
-  {
-    int type;cin>>type;
-    if(type==1){
-        int l , r , v;cin>>l>>r>>v;
-        t.rangeupdate(0 , n-1 , l , r-1 , v , 0);
-    }else{
-        int ind;cin>>ind;
-        auto ans = t.rangequery(0 , n-1 , ind , 0);
-        cout<<ans.first<<endl;
-    }
-  }
-  
+ while(m--)
+ {
+   int type;cin>>type;
+   if(type==1){
+     int l , r;cin>>l>>r;int val;cin>>val;
+     t.rangeupdate(0 , n-1 , l , r-1 , 0 , val);
+   }else{
+     int l , r;cin>>l>>r;
+      ll ans =  t.query(0 , n-1 , l , r-1 , 0);
+      if(ans==LLONG_MAX){
+         cout<<0<<endl;
+      }else{
+         cout<<ans<<endl;
+      }
+   }
+ }
 }
 int main(){
 std::ios::sync_with_stdio(false);std::cin.tie(nullptr);std::cout.tie(nullptr);
