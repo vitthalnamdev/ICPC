@@ -25,7 +25,7 @@ int32_t main() {
 	cin >> t;
 	while (t--) {
 		cin >> n;
-    vector<vector<int>>dp(n+1  , vector<int>(4));
+        vector<vector<ll>>dp(n+1  , vector<ll>(4));
 		for (int i = 0; i < n; i++) cin >> arr[i];
 
 		for (int i = 1; i <= n; i++)
@@ -58,7 +58,7 @@ int32_t main() {
 
 		 	// cout << ' ' << i << '\t' << dp[i][0] << ' ' << dp[i][1] << ' ' << dp[i][2] << ' ' << dp[i][3] << '\n';
 		}
-        debug(dp);
+      
 		cout << dp[n][0] << '\n';
 	}
 }

@@ -5,21 +5,26 @@ using namespace std;
 // function to generate random numbers in range [0-999] : 
 int randomize() 
 { 
-	return (rand() % 2); 
+	return (rand()); 
 } 
 
 int main () 
 { 
 // for different values each time we run the code 
 srand(time(NULL)); 
-cout<<1<<endl;
-int N = rand()%200000+1;
-cout<<N<<endl;
+int x = randomize()%80;
+if(x<10){
+	x+=10;
+}
+ cout<<x<<" ";
+ int n = 300000;
+ set<int>s;
+ for(int i=0;i<n;i++){
+	int xx =i , h;
+	 
+	h = 1000;
+	if(h==0)h++;
+	cout<<xx<<" "<<h<<endl;
+ }
  
-for(int i=0;i<N;i++)
-{
-      int x = randomize();
-      cout<<x<<" ";
-}cout<<endl;
-return 0; 
 } 
